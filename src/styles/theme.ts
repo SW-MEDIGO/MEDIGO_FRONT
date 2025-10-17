@@ -1,17 +1,17 @@
 export const theme = {
   colors: {
-    primary: '#007AFF',
-    secondary: '#5856D6',
-    success: '#34C759',
-    warning: '#FF9500',
-    error: '#FF3B30',
-    background: '#FFFFFF',
-    surface: '#F2F2F7',
-    text: '#000000',
-    textSecondary: '#8E8E93',
-    border: '#C6C6C8',
-    white: '#FFFFFF',
-    black: '#000000',
+    primary: "#007AFF",
+    secondary: "#5856D6",
+    success: "#34C759",
+    warning: "#FF9500",
+    error: "#FF3B30",
+    background: "#FFFFFF",
+    surface: "#F2F2F7",
+    text: "#000000",
+    textSecondary: "#8E8E93",
+    border: "#C6C6C8",
+    white: "#FFFFFF",
+    black: "#000000",
   },
   spacing: {
     xs: 4,
@@ -38,14 +38,14 @@ export const theme = {
     xxxl: 32,
   },
   fontWeight: {
-    normal: '400' as const,
-    medium: '500' as const,
-    semibold: '600' as const,
-    bold: '700' as const,
+    normal: "400" as const,
+    medium: "500" as const,
+    semibold: "600" as const,
+    bold: "700" as const,
   },
   shadows: {
     sm: {
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 1,
@@ -55,7 +55,7 @@ export const theme = {
       elevation: 1,
     },
     md: {
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 2,
@@ -65,12 +65,12 @@ export const theme = {
       elevation: 4,
     },
     lg: {
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 4,
       },
-      shadowOpacity: 0.30,
+      shadowOpacity: 0.3,
       shadowRadius: 4.65,
       elevation: 8,
     },

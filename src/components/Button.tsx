@@ -1,43 +1,43 @@
-import React from 'react';
-import styled from 'styled-components/native';
-import { theme } from '../styles';
+import React from "react";
+import styled from "styled-components/native";
+import { theme } from "../styles";
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'medium' | 'large';
+  variant?: "primary" | "secondary" | "outline";
+  size?: "small" | "medium" | "large";
   disabled?: boolean;
 }
 
 const StyledButton = styled.TouchableOpacity<{
-  variant: 'primary' | 'secondary' | 'outline';
-  size: 'small' | 'medium' | 'large';
+  variant: "primary" | "secondary" | "outline";
+  size: "small" | "medium" | "large";
   disabled: boolean;
 }>`
   background-color: ${({ variant, disabled }) => {
     if (disabled) return theme.colors.border;
     switch (variant) {
-      case 'primary':
+      case "primary":
         return theme.colors.primary;
-      case 'secondary':
+      case "secondary":
         return theme.colors.secondary;
-      case 'outline':
-        return 'transparent';
+      case "outline":
+        return "transparent";
       default:
         return theme.colors.primary;
     }
   }};
   border: ${({ variant }) =>
-    variant === 'outline' ? `2px solid ${theme.colors.primary}` : 'none'};
+    variant === "outline" ? `2px solid ${theme.colors.primary}` : "none"};
   border-radius: ${theme.borderRadius.md}px;
   padding: ${({ size }) => {
     switch (size) {
-      case 'small':
+      case "small":
         return `${theme.spacing.sm}px ${theme.spacing.md}px`;
-      case 'medium':
+      case "medium":
         return `${theme.spacing.md}px ${theme.spacing.lg}px`;
-      case 'large':
+      case "large":
         return `${theme.spacing.lg}px ${theme.spacing.xl}px`;
       default:
         return `${theme.spacing.md}px ${theme.spacing.lg}px`;
@@ -49,17 +49,17 @@ const StyledButton = styled.TouchableOpacity<{
 `;
 
 const ButtonText = styled.Text<{
-  variant: 'primary' | 'secondary' | 'outline';
-  size: 'small' | 'medium' | 'large';
+  variant: "primary" | "secondary" | "outline";
+  size: "small" | "medium" | "large";
   disabled: boolean;
 }>`
   color: ${({ variant, disabled }) => {
     if (disabled) return theme.colors.textSecondary;
     switch (variant) {
-      case 'primary':
-      case 'secondary':
+      case "primary":
+      case "secondary":
         return theme.colors.white;
-      case 'outline':
+      case "outline":
         return theme.colors.primary;
       default:
         return theme.colors.white;
@@ -67,11 +67,11 @@ const ButtonText = styled.Text<{
   }};
   font-size: ${({ size }) => {
     switch (size) {
-      case 'small':
+      case "small":
         return theme.fontSize.sm;
-      case 'medium':
+      case "medium":
         return theme.fontSize.md;
-      case 'large':
+      case "large":
         return theme.fontSize.lg;
       default:
         return theme.fontSize.md;
@@ -83,8 +83,8 @@ const ButtonText = styled.Text<{
 export const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   disabled = false,
 }) => {
   return (

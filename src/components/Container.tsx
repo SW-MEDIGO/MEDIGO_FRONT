@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components/native';
-import { theme } from '../styles';
+import React from "react";
+import styled from "styled-components/native";
+import { theme } from "../styles";
 
 interface ContainerProps {
   children: React.ReactNode;
@@ -8,9 +8,15 @@ interface ContainerProps {
   margin?: keyof typeof theme.spacing;
   backgroundColor?: string;
   flex?: number;
-  justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
-  alignItems?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
-  flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
+  justifyContent?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
+  alignItems?: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
+  flexDirection?: "row" | "column" | "row-reverse" | "column-reverse";
 }
 
 const StyledContainer = styled.View<{
@@ -18,9 +24,15 @@ const StyledContainer = styled.View<{
   margin: keyof typeof theme.spacing;
   backgroundColor: string;
   flex: number;
-  justifyContent: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
-  alignItems: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline';
-  flexDirection: 'row' | 'column' | 'row-reverse' | 'column-reverse';
+  justifyContent:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
+  alignItems: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
+  flexDirection: "row" | "column" | "row-reverse" | "column-reverse";
 }>`
   padding: ${({ padding }) => theme.spacing[padding]}px;
   margin: ${({ margin }) => theme.spacing[margin]}px;
@@ -33,13 +45,13 @@ const StyledContainer = styled.View<{
 
 export const Container: React.FC<ContainerProps> = ({
   children,
-  padding = 'md',
-  margin = 'xs',
+  padding = "md",
+  margin = "xs",
   backgroundColor = theme.colors.background,
   flex = 0,
-  justifyContent = 'flex-start',
-  alignItems = 'flex-start',
-  flexDirection = 'column',
+  justifyContent = "flex-start",
+  alignItems = "flex-start",
+  flexDirection = "column",
 }) => {
   return (
     <StyledContainer

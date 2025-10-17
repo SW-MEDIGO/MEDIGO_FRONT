@@ -1,2 +1,2 @@
-export { theme } from './theme';
-export * from './styled.d';
+export { theme } from "./theme";
+export * from "./styled.d";

@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components/native';
-import { SafeAreaView } from 'react-native';
-import { Container, Text, Button } from '../components';
-import { theme } from '../styles';
+import React from "react";
+import styled from "styled-components/native";
+import { SafeAreaView } from "react-native";
+import { Container, Text, Button } from "../components";
+import { theme } from "../styles";
 
 const ScreenContainer = styled(SafeAreaView)`
   flex: 1;
@@ -32,15 +32,15 @@ const ButtonWrapper = styled.View`
 
 export const HomeScreen: React.FC = () => {
   const handlePrimaryPress = () => {
-    console.log('Primary button pressed');
+    console.log("Primary button pressed");
   };
 
   const handleSecondaryPress = () => {
-    console.log('Secondary button pressed');
+    console.log("Secondary button pressed");
   };
 
   const handleOutlinePress = () => {
-    console.log('Outline button pressed');
+    console.log("Outline button pressed");
   };
 
   return (
