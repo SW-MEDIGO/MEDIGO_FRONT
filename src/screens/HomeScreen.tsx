@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { SafeAreaView } from "react-native";
-import { Container, Text, Button } from "../components";
+import { Container, Text, Button, Header } from "../components";
 import { theme } from "../styles";
 
 const ScreenContainer = styled(SafeAreaView)`
@@ -45,12 +45,21 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <ScreenContainer>
+      <Header />
       <ContentContainer>
         <TitleContainer>
-          <Text size="xxxl" weight="bold" color={theme.colors.primary}>
+          <Text
+            size="xxxl"
+            weight="bold"
+            color={theme.colors.primary}
+          >
             Medigo
           </Text>
-          <Text size="lg" weight="medium" color={theme.colors.textSecondary}>
+          <Text
+            size="lg"
+            weight="medium"
+            color={theme.colors.textSecondary}
+          >
             React Native + TypeScript + Styled Components
           </Text>
         </TitleContainer>
