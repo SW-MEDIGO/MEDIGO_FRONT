@@ -1,31 +1,43 @@
 import React from "react";
 import styled from "styled-components/native";
 import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar, Platform } from "react-native";
+import { theme } from "../styles";
 
 interface HeaderProps {
   children?: React.ReactNode;
 }
 
+const STATUS_BAR_HEIGHT = Platform.OS === "ios" ? 44 : StatusBar.currentHeight || 0;
+
 const HeaderContainer = styled(LinearGradient)`
   width: 100%;
-  height: 128px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.07;
-  shadow-radius: 4px;
-  elevation: 3;
+  height: ${100 + STATUS_BAR_HEIGHT}px;
+  padding-top: ${STATUS_BAR_HEIGHT}px;
+  border-bottom-left-radius: ${theme.borderRadius.xl}px;
+  border-bottom-right-radius: ${theme.borderRadius.xl}px;
+  shadow-color: ${theme.shadows.sm.shadowColor};
+  shadow-offset: ${theme.shadows.sm.shadowOffset.width}px ${theme.shadows.sm.shadowOffset.height}px;
+  shadow-opacity: ${theme.shadows.sm.shadowOpacity};
+  shadow-radius: ${theme.shadows.sm.shadowRadius}px;
+  elevation: ${theme.shadows.sm.elevation};
 `;
 
 export const Header: React.FC<HeaderProps> = ({ children }) => {
   return (
-    <HeaderContainer
-      colors={["#466BEE", "#1B4E4D"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-    >
-      {children}
-    </HeaderContainer>
+    <>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="light-content"
+      />
+      <HeaderContainer
+        colors={["#466BEE", "#1B4E4D"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+      >
+        {children}
+      </HeaderContainer>
+    </>
   );
 };

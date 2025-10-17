@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components/native";
-import { SafeAreaView } from "react-native";
+import { View } from "react-native";
 import { Container, Text, Button, Header } from "../components";
 import { theme } from "../styles";
 
-const ScreenContainer = styled(SafeAreaView)`
+const ScreenContainer = styled(View)`
   flex: 1;
   background-color: ${theme.colors.background};
 `;
