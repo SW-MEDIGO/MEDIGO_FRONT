@@ -15,7 +15,7 @@ const StyledButton = styled.TouchableOpacity<{
   size: "small" | "medium" | "large";
   disabled: boolean;
 }>`
-  background-color: ${({ variant, disabled }) => {
+  background-color: ${({ variant, disabled }: { variant: "primary" | "secondary" | "outline"; disabled: boolean }) => {
     if (disabled) return theme.colors.border;
     switch (variant) {
       case "primary":
@@ -28,10 +28,10 @@ const StyledButton = styled.TouchableOpacity<{
         return theme.colors.primary;
     }
   }};
-  border: ${({ variant }) =>
+  border: ${({ variant }: { variant: "primary" | "secondary" | "outline" }) =>
     variant === "outline" ? `2px solid ${theme.colors.primary}` : "none"};
   border-radius: ${theme.borderRadius.md}px;
-  padding: ${({ size }) => {
+  padding: ${({ size }: { size: "small" | "medium" | "large" }) => {
     switch (size) {
       case "small":
         return `${theme.spacing.sm}px ${theme.spacing.md}px`;
@@ -45,7 +45,7 @@ const StyledButton = styled.TouchableOpacity<{
   }};
   align-items: center;
   justify-content: center;
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  opacity: ${({ disabled }: { disabled: boolean }) => (disabled ? 0.6 : 1)};
 `;
 
 const ButtonText = styled.Text<{
@@ -53,7 +53,7 @@ const ButtonText = styled.Text<{
   size: "small" | "medium" | "large";
   disabled: boolean;
 }>`
-  color: ${({ variant, disabled }) => {
+  color: ${({ variant, disabled }: { variant: "primary" | "secondary" | "outline"; disabled: boolean }) => {
     if (disabled) return theme.colors.textSecondary;
     switch (variant) {
       case "primary":
@@ -65,7 +65,7 @@ const ButtonText = styled.Text<{
         return theme.colors.white;
     }
   }};
-  font-size: ${({ size }) => {
+  font-size: ${({ size }: { size: "small" | "medium" | "large" }) => {
     switch (size) {
       case "small":
         return theme.fontSize.sm;
@@ -95,7 +95,11 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <ButtonText variant={variant} size={size} disabled={disabled}>
+      <ButtonText
+        variant={variant}
+        size={size}
+        disabled={disabled}
+      >
         {title}
       </ButtonText>
     </StyledButton>
