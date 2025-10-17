@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
 import { MyPageScreen, HomeScreen } from "./src/screens";
-import { Header, BottomNavigation } from "./src/components";
+import { BottomNavigation } from "./src/components";
 import { theme } from "./src/styles";
 import { View } from "react-native";
 
