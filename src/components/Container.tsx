@@ -8,29 +8,39 @@ interface ContainerProps {
   margin?: keyof typeof theme.spacing;
   backgroundColor?: string;
   flex?: number;
-  justifyContent?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly";
+  justifyContent?:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
   alignItems?: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
   flexDirection?: "row" | "column" | "row-reverse" | "column-reverse";
 }
 
-interface StyledContainerProps {
+const StyledContainer = styled.View<{
   padding: keyof typeof theme.spacing;
   margin: keyof typeof theme.spacing;
   backgroundColor: string;
   flex: number;
-  justifyContent: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly";
+  justifyContent:
+    | "flex-start"
+    | "flex-end"
+    | "center"
+    | "space-between"
+    | "space-around"
+    | "space-evenly";
   alignItems: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
   flexDirection: "row" | "column" | "row-reverse" | "column-reverse";
-}
-
-const StyledContainer = styled.View<StyledContainerProps>`
-  padding: ${({ padding }: StyledContainerProps) => theme.spacing[padding]}px;
-  margin: ${({ margin }: StyledContainerProps) => theme.spacing[margin]}px;
-  background-color: ${({ backgroundColor }: StyledContainerProps) => backgroundColor};
-  flex: ${({ flex }: StyledContainerProps) => flex};
-  justify-content: ${({ justifyContent }: StyledContainerProps) => justifyContent};
-  align-items: ${({ alignItems }: StyledContainerProps) => alignItems};
-  flex-direction: ${({ flexDirection }: StyledContainerProps) => flexDirection};
+}>`
+  padding: ${({ padding }) => theme.spacing[padding]}px;
+  margin: ${({ margin }) => theme.spacing[margin]}px;
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  flex: ${({ flex }) => flex};
+  justify-content: ${({ justifyContent }) => justifyContent};
+  align-items: ${({ alignItems }) => alignItems};
+  flex-direction: ${({ flexDirection }) => flexDirection};
 `;
 
 export const Container: React.FC<ContainerProps> = ({
