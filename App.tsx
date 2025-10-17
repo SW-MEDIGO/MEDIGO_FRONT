@@ -9,6 +9,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <MyPageScreen />
       <StatusBar style="auto" />
+      <HomeScreen />
     </ThemeProvider>
   );
 }
