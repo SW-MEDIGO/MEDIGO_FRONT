@@ -39,7 +39,7 @@ const TabText = styled.Text<{ isActive: boolean }>`
   font-size: 12px;
   font-weight: 500;
   color: ${(props: { isActive: boolean }) =>
-    props.isActive ? "#000000" : "#9CA3AF"};
+    props.isActive ? "#4a4a4a " : "#9CA3AF"};
   text-align: center;
 `;
 
@@ -76,8 +76,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
           >
             <TabIcon>
               <IconComponent
-                size={24}
-                color={isActive ? "#000000" : "#9CA3AF"}
+                size={32}
+                color={isActive ? "#4a4a4a" : "#9CA3AF"}
               />
             </TabIcon>
             <TabText isActive={isActive}>{tab.label}</TabText>
