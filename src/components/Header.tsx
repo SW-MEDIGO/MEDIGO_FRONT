@@ -16,11 +16,6 @@ const HeaderContainer = styled(LinearGradient)`
   padding-top: ${STATUS_BAR_HEIGHT}px;
   border-bottom-left-radius: ${theme.borderRadius.xl}px;
   border-bottom-right-radius: ${theme.borderRadius.xl}px;
-  shadow-color: ${theme.shadows.sm.shadowColor};
-  shadow-offset: ${theme.shadows.sm.shadowOffset.width}px ${theme.shadows.sm.shadowOffset.height}px;
-  shadow-opacity: ${theme.shadows.sm.shadowOpacity};
-  shadow-radius: ${theme.shadows.sm.shadowRadius}px;
-  elevation: ${theme.shadows.sm.elevation};
 `;
 
 export const Header: React.FC<HeaderProps> = ({ children }) => {
@@ -35,6 +30,13 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
         colors={["#466BEE", "#1B4E4D"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
+        style={{
+          shadowColor: theme.shadows.sm.shadowColor,
+          shadowOffset: theme.shadows.sm.shadowOffset,
+          shadowOpacity: theme.shadows.sm.shadowOpacity,
+          shadowRadius: theme.shadows.sm.shadowRadius,
+          elevation: theme.shadows.sm.elevation,
+        }}
       >
         {children}
       </HeaderContainer>

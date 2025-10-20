@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
 import { MyPageScreen, HomeScreen } from "./src/screens";
-import { BottomNavigation } from "./src/components";
+import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
 import { View } from "react-native";
 
@@ -29,7 +29,10 @@ export default function App() {
       <View style={{ flex: 1 }}>
         <Header />
         {renderScreen()}
-        <BottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />
+        <BottomNavigation
+          activeTab={activeTab}
+          onTabPress={setActiveTab}
+        />
         <StatusBar style="auto" />
       </View>
     </ThemeProvider>
