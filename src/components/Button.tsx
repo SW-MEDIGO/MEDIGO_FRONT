@@ -10,12 +10,14 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-const StyledButton = styled.TouchableOpacity<{
+interface StyledButtonProps {
   variant: "primary" | "secondary" | "outline";
   size: "small" | "medium" | "large";
   disabled: boolean;
-}>`
-  background-color: ${({ variant, disabled }) => {
+}
+
+const StyledButton = styled.TouchableOpacity<StyledButtonProps>`
+  background-color: ${({ variant, disabled }: StyledButtonProps) => {
     if (disabled) return theme.colors.border;
     switch (variant) {
       case "primary":
@@ -28,32 +30,70 @@ const StyledButton = styled.TouchableOpacity<{
         return theme.colors.primary;
     }
   }};
-  border: ${({ variant }) =>
-    variant === "outline" ? `2px solid ${theme.colors.primary}` : "none"};
+  border-width: ${({ variant }: StyledButtonProps) => (variant === "outline" ? "2px" : "0px")};
+  border-color: ${({ variant }: StyledButtonProps) => (variant === "outline" ? theme.colors.primary : "transparent")};
   border-radius: ${theme.borderRadius.md}px;
-  padding: ${({ size }) => {
+  padding-top: ${({ size }: StyledButtonProps) => {
     switch (size) {
       case "small":
-        return `${theme.spacing.sm}px ${theme.spacing.md}px`;
+        return theme.spacing.sm;
       case "medium":
-        return `${theme.spacing.md}px ${theme.spacing.lg}px`;
+        return theme.spacing.md;
       case "large":
-        return `${theme.spacing.lg}px ${theme.spacing.xl}px`;
+        return theme.spacing.lg;
       default:
-        return `${theme.spacing.md}px ${theme.spacing.lg}px`;
+        return theme.spacing.md;
     }
-  }};
+  }}px;
+  padding-bottom: ${({ size }: StyledButtonProps) => {
+    switch (size) {
+      case "small":
+        return theme.spacing.sm;
+      case "medium":
+        return theme.spacing.md;
+      case "large":
+        return theme.spacing.lg;
+      default:
+        return theme.spacing.md;
+    }
+  }}px;
+  padding-left: ${({ size }: StyledButtonProps) => {
+    switch (size) {
+      case "small":
+        return theme.spacing.md;
+      case "medium":
+        return theme.spacing.lg;
+      case "large":
+        return theme.spacing.xl;
+      default:
+        return theme.spacing.lg;
+    }
+  }}px;
+  padding-right: ${({ size }: StyledButtonProps) => {
+    switch (size) {
+      case "small":
+        return theme.spacing.md;
+      case "medium":
+        return theme.spacing.lg;
+      case "large":
+        return theme.spacing.xl;
+      default:
+        return theme.spacing.lg;
+    }
+  }}px;
   align-items: center;
   justify-content: center;
-  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+  opacity: ${({ disabled }: StyledButtonProps) => (disabled ? 0.6 : 1)};
 `;
 
-const ButtonText = styled.Text<{
+interface ButtonTextProps {
   variant: "primary" | "secondary" | "outline";
   size: "small" | "medium" | "large";
   disabled: boolean;
-}>`
-  color: ${({ variant, disabled }) => {
+}
+
+const ButtonText = styled.Text<ButtonTextProps>`
+  color: ${({ variant, disabled }: ButtonTextProps) => {
     if (disabled) return theme.colors.textSecondary;
     switch (variant) {
       case "primary":
@@ -65,7 +105,7 @@ const ButtonText = styled.Text<{
         return theme.colors.white;
     }
   }};
-  font-size: ${({ size }) => {
+  font-size: ${({ size }: ButtonTextProps) => {
     switch (size) {
       case "small":
         return theme.fontSize.sm;
@@ -95,7 +135,11 @@ export const Button: React.FC<ButtonProps> = ({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <ButtonText variant={variant} size={size} disabled={disabled}>
+      <ButtonText
+        variant={variant}
+        size={size}
+        disabled={disabled}
+      >
         {title}
       </ButtonText>
     </StyledButton>
