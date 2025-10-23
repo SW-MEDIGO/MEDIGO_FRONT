@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { ScrollView, View, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Container, Text, Header } from "../components";
+import { Container, Text, Header, ResponseButton } from "../components";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { theme } from "../styles";
 
@@ -21,6 +21,7 @@ const ScrollContainer = styled(ScrollView)`
   flex: 1;
   padding-left: 20px;
   padding-right: 20px;
+  padding-bottom: 80px;
 `;
 
 const BannerContent = styled.View`
@@ -29,31 +30,21 @@ const BannerContent = styled.View`
 
 const BannerTitle = styled.Text`
   color: white;
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: ${theme.fontWeight.bold};
 `;
 
 const BannerDescription = styled.Text`
   color: white;
   font-size: 14px;
+  font-weight: ${theme.fontWeight.semibold};
   opacity: 0.9;
-`;
-
-const BannerIcon = styled.View`
-  width: 60px;
-  height: 60px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 30px;
-  align-items: center;
-  justify-content: center;
 `;
 
 const SectionTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
   color: #333333;
-  margin-bottom: 15px;
 `;
 
 const SectionHeader = styled.View`
@@ -64,17 +55,19 @@ const SectionHeader = styled.View`
 `;
 
 const ViewAllText = styled.Text`
-  color: #007aff;
-  font-size: 14px;
+  color: rgba(0, 166, 216, 1);
+  font-size: 16px;
 `;
 
 const CompanionCard = styled.View`
   background-color: white;
   border-radius: 12px;
   padding: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-right: 10px;
-  width: 160px;
-  align-items: center;
+  width: 200px;
+  align-items: flex-start;
 `;
 
 const ProfileImage = styled.View`
@@ -88,42 +81,11 @@ const ProfileImage = styled.View`
 `;
 
 const CompanionName = styled.Text`
-  font-size: 16px;
-  font-weight: 600;
-  color: #333333;
+  font-size: 25px;
+  font-weight: 700;
+  font-family: "Apple SD Gothic Neo";
+  color: #4a4a4a;
   margin-bottom: 5px;
-`;
-
-const RatingContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const StarIcon = styled.Text`
-  color: #ffd700;
-  font-size: 14px;
-  margin-right: 4px;
-`;
-
-const RatingText = styled.Text`
-  font-size: 14px;
-  color: #666666;
-`;
-
-const ResponseButton = styled.View<{ isFast: boolean }>`
-  background-color: ${(props: { isFast: boolean }) =>
-    props.isFast ? "#007AFF" : "#666666"};
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 12px;
-  padding-right: 12px;
-  border-radius: 15px;
-`;
-
-const ResponseText = styled.Text`
-  color: white;
-  font-size: 12px;
 `;
 
 const ReservationCard = styled.View`
@@ -162,19 +124,9 @@ const HospitalTitle = styled.Text`
 `;
 
 const HospitalDescription = styled.Text`
-  font-size: 14px;
+  font-size: 12px;
   color: #666666;
 `;
-
-const HospitalIcon = styled.View`
-  width: 50px;
-  height: 50px;
-  background-color: #20b2aa;
-  border-radius: 25px;
-  align-items: center;
-  justify-content: center;
-`;
-
 interface HomeScreenProps {
   activeTab: string;
   onTabPress: (tab: string) => void;
@@ -198,8 +150,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           end={{ x: 0.5, y: 1 }}
           style={{
             borderRadius: 15,
-            padding: 25,
-            marginTop: 20,
+            padding: 15,
+            paddingLeft: 20,
+            marginTop: 40,
             marginBottom: 25,
             flexDirection: "row",
             alignItems: "center",
@@ -217,9 +170,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               메디고와 함께 검증된 동행자를 찾아보세요
             </BannerDescription>
           </BannerContent>
-          <BannerIcon>
-            <StatusText style={{ fontSize: 24 }}>👥</StatusText>
-          </BannerIcon>
+          <Image
+            source={require("../../assets/main/connect.png")}
+            style={{
+              width: 60,
+              height: 60,
+              marginLeft: 10,
+            }}
+            resizeMode="contain"
+          />
         </LinearGradient>
 
         {/* 바로 동행 섹션 */}
@@ -243,16 +202,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             }}
           >
             <ProfileImage>
-              <StatusText style={{ fontSize: 24 }}>🐵</StatusText>
+              <StatusText style={{ fontSize: 24 }}></StatusText>
             </ProfileImage>
             <CompanionName>우은식</CompanionName>
-            <RatingContainer>
-              <StarIcon>⭐</StarIcon>
-              <RatingText>4.9</RatingText>
-            </RatingContainer>
-            <ResponseButton isFast={true}>
-              <ResponseText>평균 5분 이내 응답</ResponseText>
-            </ResponseButton>
+            <ResponseButton isOnline={true}>평균 5분 이내 응답</ResponseButton>
           </CompanionCard>
 
           <CompanionCard
@@ -265,15 +218,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             }}
           >
             <ProfileImage>
-              <StatusText style={{ fontSize: 24 }}>🐻</StatusText>
+              <StatusText style={{ fontSize: 24 }}></StatusText>
             </ProfileImage>
             <CompanionName>강윤서</CompanionName>
-            <RatingContainer>
-              <StarIcon>⭐</StarIcon>
-              <RatingText>4</RatingText>
-            </RatingContainer>
-            <ResponseButton isFast={false}>
-              <ResponseText>평균 15분 이내 응답</ResponseText>
+            <ResponseButton isOnline={false}>
+              평균 15분 이내 응답
             </ResponseButton>
           </CompanionCard>
         </ScrollView>
@@ -300,9 +249,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               주변에 있는 병원 / 약국이 열려있는지 확인하세요
             </HospitalDescription>
           </HospitalContent>
-          <HospitalIcon>
-            <StatusText style={{ fontSize: 20, color: "white" }}>💊</StatusText>
-          </HospitalIcon>
+          <Image
+            source={require("../../assets/main/ping.png")}
+            style={{
+              width: 50,
+              height: 50,
+            }}
+            resizeMode="contain"
+          />
         </HospitalCard>
       </ScrollContainer>
 

@@ -7,12 +7,12 @@ import { theme } from "./src/styles";
 import { View } from "react-native";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("home");
 
   const renderScreen = () => {
     switch (activeTab) {
       case "home":
-        return <HomeScreen />;
+        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
       case "usage":
         return <MyPageScreen />;
       case "records":
@@ -20,19 +20,18 @@ export default function App() {
       case "profile":
         return <MyPageScreen />;
       default:
-        return <MyPageScreen />;
+        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
     }
   };
 
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
-        <Header />
+        {activeTab !== "home" && <Header />}
         {renderScreen()}
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabPress={setActiveTab}
-        />
+        {activeTab !== "home" && (
+          <BottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />
+        )}
         <StatusBar style="auto" />
       </View>
     </ThemeProvider>
