@@ -25,8 +25,7 @@ const OfflineButton = styled.View`
   background-color: #4a4a4a;
   padding-top: 4px;
   padding-bottom: 4px;
-  padding-left: 90px;
-  padding-right: 90px;
+  width: 160;
   border-radius: 10px;
   shadow-color: #000;
   shadow-offset: 0px 0px;

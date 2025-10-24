@@ -70,6 +70,35 @@ const CompanionCard = styled.View`
   align-items: flex-start;
 `;
 
+const ProfileSection = styled.View`
+  flex-direction: row;
+  align-items: flex-start;
+`;
+
+const ProfileInfo = styled.View`
+  flex: 1;
+  align-items: flex-start;
+`;
+
+const RatingSection = styled.View`
+  flex-direction: row;
+  align-items: flex-start;
+  margin-left: 10px;
+  margin-top: 0px;
+`;
+
+const StarIcon = styled.Text`
+  color: #ffd700;
+  font-size: 20px;
+  margin-right: 4px;
+`;
+
+const RatingText = styled.Text`
+  color: #333333;
+  font-size: 18px;
+  font-weight: 600;
+`;
+
 const ProfileImage = styled.View`
   width: 50px;
   height: 50px;
@@ -117,8 +146,9 @@ const HospitalContent = styled.View`
 `;
 
 const HospitalTitle = styled.Text`
-  font-size: 18px;
-  font-weight: bold;
+  font-family: "Apple SD Gothic Neo";
+  font-size: 20px;
+  font-weight: 700;
   color: #333333;
   margin-bottom: 5px;
 `;
@@ -201,10 +231,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               elevation: 3,
             }}
           >
-            <ProfileImage>
-              <StatusText style={{ fontSize: 24 }}></StatusText>
-            </ProfileImage>
-            <CompanionName>우은식</CompanionName>
+            <ProfileSection>
+              <ProfileInfo>
+                <ProfileImage>
+                  <Image
+                    source={{
+                      uri: "https://i.pinimg.com/736x/43/03/f7/4303f773635c20072109844a616e82c8.jpg",
+                    }}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                    }}
+                    resizeMode="cover"
+                  />
+                </ProfileImage>
+                <CompanionName>우은식</CompanionName>
+              </ProfileInfo>
+              <RatingSection>
+                <StarIcon>★</StarIcon>
+                <RatingText>4.9</RatingText>
+              </RatingSection>
+            </ProfileSection>
             <ResponseButton isOnline={true}>평균 5분 이내 응답</ResponseButton>
           </CompanionCard>
 
@@ -217,10 +265,28 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               elevation: 3,
             }}
           >
-            <ProfileImage>
-              <StatusText style={{ fontSize: 24 }}></StatusText>
-            </ProfileImage>
-            <CompanionName>강윤서</CompanionName>
+            <ProfileSection>
+              <ProfileInfo>
+                <ProfileImage>
+                  <Image
+                    source={{
+                      uri: "https://i.pinimg.com/236x/5a/6a/cd/5a6acd6baf7579bfdb839f169743d83d.jpg",
+                    }}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                    }}
+                    resizeMode="cover"
+                  />
+                </ProfileImage>
+                <CompanionName>강윤서</CompanionName>
+              </ProfileInfo>
+              <RatingSection>
+                <StarIcon>★</StarIcon>
+                <RatingText>4.7</RatingText>
+              </RatingSection>
+            </ProfileSection>
             <ResponseButton isOnline={false}>
               평균 15분 이내 응답
             </ResponseButton>
