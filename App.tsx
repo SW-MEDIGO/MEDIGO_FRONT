@@ -41,7 +41,7 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case "home":
-        return <HomeScreen />;
+        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
       case "usage":
         return <MyPageScreen />;
       case "records":
@@ -49,7 +49,8 @@ export default function App() {
       case "profile":
         return <MyPageScreen />;
       default:
-        return <HomeScreen />;
+        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
+
     }
   };
 
@@ -138,12 +139,11 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
-        <Header />
+        {activeTab !== "home" && <Header />}
         {renderScreen()}
-        <BottomNavigation
-          activeTab={activeTab}
-          onTabPress={setActiveTab}
-        />
+        {activeTab !== "home" && (
+          <BottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />
+        )}
         <StatusBar style="auto" />
       </View>
     </ThemeProvider>
