@@ -173,14 +173,14 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
           <Text
             size="xxl"
             weight="bold"
-            color={theme.colors.text}
+            color={theme.colors.text.primary}
           >
             원활한 서비스 이용을 위해
           </Text>
           <Text
             size="xxl"
             weight="bold"
-            color={theme.colors.text}
+            color={theme.colors.text.primary}
           >
             필수 약관 동의가 필요해요
           </Text>
@@ -202,7 +202,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
               <Text
                 size="xl"
                 weight="semibold"
-                color={theme.colors.text}
+                color={theme.colors.text.primary}
               >
                 모두 동의합니다.
               </Text>
@@ -217,7 +217,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
               <Text
                 size="md"
                 weight="normal"
-                color={theme.colors.text}
+                color={theme.colors.text.primary}
               >
                 (필수) 서비스 이용약관에 동의합니다.
               </Text>
@@ -232,7 +232,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
               <Text
                 size="md"
                 weight="normal"
-                color={theme.colors.text}
+                color={theme.colors.text.primary}
               >
                 (필수) 개인정보 처리방침에 동의합니다.
               </Text>
@@ -247,7 +247,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
               <Text
                 size="md"
                 weight="normal"
-                color={theme.colors.text}
+                color={theme.colors.text.primary}
               >
                 (필수) 위치기반 서비스 이용약관에 동의합니다.
               </Text>
@@ -262,7 +262,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
               <Text
                 size="md"
                 weight="normal"
-                color={theme.colors.text}
+                color={theme.colors.text.primary}
               >
                 (필수) 만 14세 이상입니다.
               </Text>
@@ -277,7 +277,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
               <Text
                 size="md"
                 weight="normal"
-                color={theme.colors.text}
+                color={theme.colors.text.primary}
               >
                 (선택) 마케팅 정보 수신에 동의합니다.
               </Text>

@@ -6,3 +6,4 @@ export { SignUpAccount } from "./SignUp/SignUpAccount";
 export { SignUpUserInfo } from "./SignUp/SignUpUserInfo";
 export { SignUpPolicy } from "./SignUp/SignUpPolicy";
 export { SignUpRole } from "./SignUp/SignUpRole";
+export { OnboardingContainer } from "./Onboarding/OnboardingContainer";

@@ -16,8 +16,10 @@ export const theme = {
     error: "#FF3B30",
     background: "#F0F2F5",
     surface: "#F2F2F7",
-    text: "#4A4A4A",
-    textSecondary: "#8E8E93",
+    text: {
+      primary: "#4A4A4A",
+      secondary: "#8E8E93",
+    },
     border: "#C6C6C8",
     white: "#FFFFFF",
     black: "#000000",

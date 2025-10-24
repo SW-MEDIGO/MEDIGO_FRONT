@@ -34,6 +34,7 @@ const Content = styled.View`
 
 const LogoContainer = styled.View`
   align-items: center;
+  margin-top: ${theme.spacing.xxxl}px;
   margin-bottom: ${theme.spacing.xxxl}px;
 `;
 
@@ -55,7 +56,7 @@ const LinkContainer = styled.View`
 const LinkText = styled.Text`
   font-family: ${theme.fonts.primary};
   font-size: ${theme.fontSize.md}px;
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.text.secondary};
   margin-left: ${theme.spacing.sm}px;
   margin-right: ${theme.spacing.sm}px;
 `;
@@ -100,7 +101,7 @@ const DividerLine = styled.View`
 const DividerText = styled.Text`
   font-family: ${theme.fonts.primary};
   font-size: ${theme.fontSize.sm}px;
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.text.secondary};
   margin-left: ${theme.spacing.md}px;
   margin-right: ${theme.spacing.md}px;
 `;
@@ -112,7 +113,7 @@ const SnsContainer = styled.View`
 const SnsText = styled.Text`
   font-family: ${theme.fonts.primary};
   font-size: ${theme.fontSize.sm}px;
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.text.secondary};
   margin-bottom: ${theme.spacing.md}px;
 `;
 
@@ -123,18 +124,18 @@ const SnsButtonContainer = styled.View`
 `;
 
 const SnsButton = styled.TouchableOpacity`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 `;
 
 const SnsButtonImage = styled.Image`
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
 `;
 
 export const Login = ({ onLoginSuccess, onSignUpPress, onFindIdPress, onFindPasswordPress }: LoginProps) => {

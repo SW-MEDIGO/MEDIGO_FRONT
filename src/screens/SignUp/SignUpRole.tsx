@@ -132,7 +132,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
           <Text
             size="xxl"
             weight="bold"
-            color={theme.colors.text}
+            color={theme.colors.text.primary}
           >
             <Text
               size="xxl"
@@ -146,7 +146,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
           <Text
             size="xl"
             weight="medium"
-            color={theme.colors.text}
+            color={theme.colors.text.primary}
           >
             당신의 역할을 선택해주세요.
           </Text>
@@ -170,7 +170,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
                 <Text
                   size="xl"
                   weight="bold"
-                  color={theme.colors.text}
+                  color={theme.colors.text.primary}
                 >
                   사용자
                 </Text>
@@ -178,7 +178,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
               <Text
                 size="md"
                 weight="medium"
-                color={theme.colors.textSecondary}
+                color={theme.colors.text.secondary}
               >
                 도움이 필요해요!
               </Text>
@@ -206,7 +206,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
                 <Text
                   size="xl"
                   weight="bold"
-                  color={theme.colors.text}
+                  color={theme.colors.text.primary}
                 >
                   동행자
                 </Text>
@@ -214,7 +214,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
               <Text
                 size="md"
                 weight="medium"
-                color={theme.colors.textSecondary}
+                color={theme.colors.text.secondary}
               >
                 도움을 주고싶어요!
               </Text>

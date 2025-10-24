@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   MyPageScreen,
   HomeScreen,
@@ -10,12 +11,15 @@ import {
   SignUpUserInfo,
   SignUpPolicy,
   SignUpRole,
+  OnboardingContainer,
 } from "./src/screens";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
 import { View } from "react-native";
 
 export default function App() {
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
@@ -39,10 +43,42 @@ export default function App() {
     marketingConsent: false,
   });
 
+  // 앱 시작 시 온보딩 완료 상태 확인
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const onboardingCompleted = await AsyncStorage.getItem("onboardingCompleted");
+        setHasCompletedOnboarding(onboardingCompleted === "true");
+      } catch (error) {
+        console.log("온보딩 상태 확인 중 오류:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  // 온보딩 완료 처리
+  const handleOnboardingComplete = async () => {
+    try {
+      await AsyncStorage.setItem("onboardingCompleted", "true");
+      setHasCompletedOnboarding(true);
+    } catch (error) {
+      console.log("온보딩 완료 상태 저장 중 오류:", error);
+      setHasCompletedOnboarding(true); // 오류가 있어도 온보딩은 완료로 처리
+    }
+  };
+
   const renderScreen = () => {
     switch (activeTab) {
       case "home":
-        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
+        return (
+          <HomeScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
+        );
       case "usage":
         return <MyPageScreen />;
       case "records":
@@ -50,9 +86,38 @@ export default function App() {
       case "profile":
         return <MyPageScreen />;
       default:
-        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
+        return (
+          <HomeScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
+        );
     }
   };
+
+  // 로딩 중이면 로딩 화면 표시 (선택사항)
+  if (isLoading) {
+    return (
+      <ThemeProvider theme={theme}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.background }}
+        >
+          {/* 로딩 스피너나 로고를 여기에 추가할 수 있습니다 */}
+        </View>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    );
+  }
+
+  // 온보딩을 완료하지 않았으면 온보딩 화면 표시
+  if (!hasCompletedOnboarding) {
+    return (
+      <ThemeProvider theme={theme}>
+        <OnboardingContainer onComplete={handleOnboardingComplete} />
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    );
+  }
 
   // 로그인되지 않았으면 로그인 화면 표시
   if (!isLoggedIn) {
@@ -81,8 +146,8 @@ export default function App() {
                   password: signUpData.password,
                   passwordConfirm: signUpData.passwordConfirm,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(2);
                 }}
                 onBack={() => setIsSigningUp(false)}
@@ -94,8 +159,8 @@ export default function App() {
                   name: signUpData.name,
                   phoneNumber: signUpData.phoneNumber,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(3);
                 }}
                 onBack={() => setSignUpStep(1)}
@@ -110,8 +175,8 @@ export default function App() {
                   ageLimit: signUpData.ageLimit,
                   marketingConsent: signUpData.marketingConsent,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(4);
                 }}
                 onBack={() => setSignUpStep(2)}
@@ -142,7 +207,10 @@ export default function App() {
         {activeTab !== "home" && <Header />}
         {renderScreen()}
         {activeTab !== "home" && (
-          <BottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />
+          <BottomNavigation
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
         )}
         <StatusBar style="auto" />
       </View>
