@@ -1,13 +1,22 @@
+import { Platform } from "react-native";
+
 export const theme = {
+  fonts: {
+    primary: Platform.select({
+      ios: "Apple SD Gothic Neo",
+      android: "sans-serif",
+      default: "System",
+    }),
+  },
   colors: {
     primary: "#007AFF",
     secondary: "#5856D6",
     success: "#34C759",
     warning: "#FF9500",
     error: "#FF3B30",
-    background: "#FFFFFF",
+    background: "#F0F2F5",
     surface: "#F2F2F7",
-    text: "#000000",
+    text: "#4A4A4A",
     textSecondary: "#8E8E93",
     border: "#C6C6C8",
     white: "#FFFFFF",
@@ -20,6 +29,7 @@ export const theme = {
     lg: 24,
     xl: 32,
     xxl: 48,
+    xxxl: 80,
   },
   borderRadius: {
     sm: 4,

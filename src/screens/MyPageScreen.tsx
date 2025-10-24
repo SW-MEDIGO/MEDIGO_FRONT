@@ -6,7 +6,7 @@ import { theme } from "../styles";
 
 const ScreenContainer = styled(SafeAreaView)`
   flex: 1;
-  background-color: ${theme.colors.surface};
+  background-color: ${theme.colors.background};
 `;
 
 const Scroll = styled.ScrollView`
@@ -45,7 +45,7 @@ const IconCircle = styled.View`
   width: 36px;
   height: 36px;
   border-radius: 18px;
-  background-color: ${theme.colors.surface};
+  background-color: ${theme.colors.background};
   align-items: center;
   justify-content: center;
 `;
@@ -59,7 +59,7 @@ const Menu = styled.View`
 
 const Divider = styled.View`
   height: 1px;
-  background-color: ${theme.colors.surface};
+  background-color: ${theme.colors.background};
   margin-left: ${theme.spacing.lg}px;
 `;
 
@@ -71,7 +71,16 @@ const ItemRow = styled.TouchableOpacity`
 `;
 
 const RightArrow = () => (
-  <View style={{ width: 16, height: 16, borderRightWidth: 2, borderTopWidth: 2, transform: [{ rotate: "45deg" }], borderColor: theme.colors.textSecondary }} />
+  <View
+    style={{
+      width: 16,
+      height: 16,
+      borderRightWidth: 2,
+      borderTopWidth: 2,
+      transform: [{ rotate: "45deg" }],
+      borderColor: theme.colors.textSecondary,
+    }}
+  />
 );
 
 const SmallGap = styled.View`
@@ -87,12 +96,20 @@ const QuickAction = ({ label }: { label: string }) => (
   <View style={{ alignItems: "center", flex: 1 }}>
     <IconCircle />
     <View style={{ height: theme.spacing.sm }} />
-    <Text size="sm" color={theme.colors.textSecondary}>{label}</Text>
+    <Text
+      size="sm"
+      color={theme.colors.textSecondary}
+    >
+      {label}
+    </Text>
   </View>
 );
 
 const MenuItem = ({ title }: { title: string }) => (
-  <ItemRow activeOpacity={0.7} onPress={() => {}}>
+  <ItemRow
+    activeOpacity={0.7}
+    onPress={() => {}}
+  >
     <Text size="md">{title}</Text>
     <RightArrow />
   </ItemRow>
@@ -105,11 +122,26 @@ export const MyPageScreen: React.FC = () => {
         <Card>
           <Row>
             <Avatar>
-              <Text weight="bold" color={theme.colors.white}>장</Text>
+              <Text
+                weight="bold"
+                color={theme.colors.white}
+              >
+                장
+              </Text>
             </Avatar>
             <View>
-              <Text size="lg" weight="bold">장은성</Text>
-              <Text size="sm" color={theme.colors.textSecondary}>마이페이지</Text>
+              <Text
+                size="lg"
+                weight="bold"
+              >
+                장은성
+              </Text>
+              <Text
+                size="sm"
+                color={theme.colors.textSecondary}
+              >
+                마이페이지
+              </Text>
             </View>
           </Row>
 
@@ -142,5 +174,3 @@ export const MyPageScreen: React.FC = () => {
     </ScreenContainer>
   );
 };
-
-
