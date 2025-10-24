@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components/native";
 import {
   MyPageScreen,
   HomeScreen,
+  MedicalRecordsScreen,
   Login,
   SignUpAccount,
   SignUpUserInfo,
@@ -45,12 +46,11 @@ export default function App() {
       case "usage":
         return <MyPageScreen />;
       case "records":
-        return <MyPageScreen />;
+        return <MedicalRecordsScreen onTabPress={setActiveTab} />;
       case "profile":
         return <MyPageScreen />;
       default:
         return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
-
     }
   };
 
@@ -81,8 +81,8 @@ export default function App() {
                   password: signUpData.password,
                   passwordConfirm: signUpData.passwordConfirm,
                 }}
-                onComplete={data => {
-                  setSignUpData(prev => ({ ...prev, ...data }));
+                onComplete={(data) => {
+                  setSignUpData((prev) => ({ ...prev, ...data }));
                   setSignUpStep(2);
                 }}
                 onBack={() => setIsSigningUp(false)}
@@ -94,8 +94,8 @@ export default function App() {
                   name: signUpData.name,
                   phoneNumber: signUpData.phoneNumber,
                 }}
-                onComplete={data => {
-                  setSignUpData(prev => ({ ...prev, ...data }));
+                onComplete={(data) => {
+                  setSignUpData((prev) => ({ ...prev, ...data }));
                   setSignUpStep(3);
                 }}
                 onBack={() => setSignUpStep(1)}
@@ -110,8 +110,8 @@ export default function App() {
                   ageLimit: signUpData.ageLimit,
                   marketingConsent: signUpData.marketingConsent,
                 }}
-                onComplete={data => {
-                  setSignUpData(prev => ({ ...prev, ...data }));
+                onComplete={(data) => {
+                  setSignUpData((prev) => ({ ...prev, ...data }));
                   setSignUpStep(4);
                 }}
                 onBack={() => setSignUpStep(2)}

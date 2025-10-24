@@ -1,5 +1,6 @@
 export { HomeScreen } from "./HomeScreen";
 export { MyPageScreen } from "./MyPageScreen";
+export { MedicalRecordsScreen } from "./MedicalRecordsScreen";
 export { Login } from "./Login";
 export { SignUpAccount } from "./SignUp/SignUpAccount";
 export { SignUpUserInfo } from "./SignUp/SignUpUserInfo";
