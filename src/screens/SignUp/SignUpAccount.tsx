@@ -174,7 +174,7 @@ export const SignUpAccount = ({ initialData, onComplete, onBack }: SignUpAccount
           <Text
             size="xxl"
             weight="bold"
-            color={theme.colors.text}
+            color={theme.colors.text.primary}
           >
             계정 정보를 입력해 주세요
           </Text>

@@ -133,7 +133,7 @@ export const SignUpUserInfo = ({ initialData, onComplete, onBack }: SignUpUserIn
           <Text
             size="xxl"
             weight="bold"
-            color={theme.colors.text}
+            color={theme.colors.text.primary}
           >
             개인 정보를 입력해 주세요
           </Text>
