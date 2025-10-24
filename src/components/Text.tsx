@@ -12,15 +12,16 @@ interface TextProps {
 }
 
 const StyledText = styled.Text<{
-  size: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
-  weight: "normal" | "medium" | "semibold" | "bold";
-  color: string;
-  align: "left" | "center" | "right";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
+  weight?: "normal" | "medium" | "semibold" | "bold";
+  color?: string;
+  align?: "left" | "center" | "right";
 }>`
-  font-size: ${({ size }) => theme.fontSize[size]}px;
-  font-weight: ${({ weight }) => theme.fontWeight[weight]};
-  color: ${({ color }) => color};
-  text-align: ${({ align }) => align};
+  font-family: ${theme.fonts.primary};
+  font-size: ${({ size = "md" }) => theme.fontSize[size as keyof typeof theme.fontSize]}px;
+  font-weight: ${({ weight = "normal" }) => theme.fontWeight[weight as keyof typeof theme.fontWeight]};
+  color: ${({ color = theme.colors.text }) => color};
+  text-align: ${({ align = "left" }) => align};
 `;
 
 export const Text: React.FC<TextProps> = ({
