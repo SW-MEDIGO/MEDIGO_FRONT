@@ -47,10 +47,18 @@ export const HomeScreen: React.FC = () => {
     <ScreenContainer>
       <ContentContainer>
         <TitleContainer>
-          <Text size="xxxl" weight="bold" color={theme.colors.primary}>
+          <Text
+            size="xxxl"
+            weight="bold"
+            color={theme.colors.primary}
+          >
             Medigo
           </Text>
-          <Text size="lg" weight="medium" color={theme.colors.textSecondary}>
+          <Text
+            size="lg"
+            weight="medium"
+            color={theme.colors.textSecondary}
+          >
             React Native + TypeScript + Styled Components
           </Text>
         </TitleContainer>
@@ -60,26 +68,20 @@ export const HomeScreen: React.FC = () => {
             <Button
               title="Primary Button"
               onPress={handlePrimaryPress}
-              variant="primary"
-              size="large"
             />
           </ButtonWrapper>
 
           <ButtonWrapper>
             <Button
-              title="Secondary Button"
+              title="Button 2"
               onPress={handleSecondaryPress}
-              variant="secondary"
-              size="large"
             />
           </ButtonWrapper>
 
           <ButtonWrapper>
             <Button
-              title="Outline Button"
+              title="Button 3"
               onPress={handleOutlinePress}
-              variant="outline"
-              size="large"
             />
           </ButtonWrapper>
 
@@ -87,8 +89,6 @@ export const HomeScreen: React.FC = () => {
             <Button
               title="Disabled Button"
               onPress={() => {}}
-              variant="primary"
-              size="large"
               disabled
             />
           </ButtonWrapper>

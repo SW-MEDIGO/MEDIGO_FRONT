@@ -4,3 +4,4 @@ export { Container } from "./Container";
 export { BottomNavigation } from "./BottomNavigation";
 export { Header } from "./Header";
 export { ProgressBar } from "./ProgressBar";
+export { InputField } from "./InputField";
