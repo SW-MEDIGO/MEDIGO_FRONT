@@ -27,12 +27,10 @@ export default function App() {
 
   // 회원가입 정보 state
   const [signUpData, setSignUpData] = useState({
-    // Step 1: 계정 정보
     userId: "",
     email: "",
     password: "",
     passwordConfirm: "",
-    // Step 2: 개인 정보
     name: "",
     phoneNumber: "",
     // Step 3: 약관 동의
