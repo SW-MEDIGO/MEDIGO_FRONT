@@ -12,6 +12,8 @@ import {
   SignUpPolicy,
   SignUpRole,
   OnboardingContainer,
+  Notification,
+  VerifyContainer,
 } from "./src/screens";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
@@ -22,6 +24,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const [isVerifyingManager, setIsVerifyingManager] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
 
@@ -33,7 +36,6 @@ export default function App() {
     passwordConfirm: "",
     name: "",
     phoneNumber: "",
-    // Step 3: 약관 동의
     termsOfService: false,
     privacyPolicy: false,
     locationService: false,
@@ -64,7 +66,7 @@ export default function App() {
       setHasCompletedOnboarding(true);
     } catch (error) {
       console.log("온보딩 완료 상태 저장 중 오류:", error);
-      setHasCompletedOnboarding(true); // 오류가 있어도 온보딩은 완료로 처리
+      setHasCompletedOnboarding(true);
     }
   };
 
@@ -78,11 +80,11 @@ export default function App() {
           />
         );
       case "usage":
-        return <MyPageScreen />;
+        return <Notification onTabPress={setActiveTab} />;
       case "records":
         return <MedicalRecordsScreen onTabPress={setActiveTab} />;
       case "profile":
-        return <MyPageScreen />;
+        return <MyPageScreen onTabPress={setActiveTab} />;
       default:
         return (
           <HomeScreen
@@ -93,21 +95,6 @@ export default function App() {
     }
   };
 
-  // 로딩 중이면 로딩 화면 표시 (선택사항)
-  if (isLoading) {
-    return (
-      <ThemeProvider theme={theme}>
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.background }}
-        >
-          {/* 로딩 스피너나 로고를 여기에 추가할 수 있습니다 */}
-        </View>
-        <StatusBar style="auto" />
-      </ThemeProvider>
-    );
-  }
-
-  // 온보딩을 완료하지 않았으면 온보딩 화면 표시
   if (!hasCompletedOnboarding) {
     return (
       <ThemeProvider theme={theme}>
@@ -117,7 +104,6 @@ export default function App() {
     );
   }
 
-  // 로그인되지 않았으면 로그인 화면 표시
   if (!isLoggedIn) {
     return (
       <ThemeProvider theme={theme}>
@@ -126,11 +112,9 @@ export default function App() {
             onLoginSuccess={() => setIsLoggedIn(true)}
             onSignUpPress={() => setIsSigningUp(true)}
             onFindIdPress={() => {
-              // TODO: 아이디 찾기 기능 구현
               console.log("아이디 찾기");
             }}
             onFindPasswordPress={() => {
-              // TODO: 비밀번호 찾기 기능 구현
               console.log("비밀번호 찾기");
             }}
           />
@@ -180,15 +164,33 @@ export default function App() {
                 onBack={() => setSignUpStep(2)}
               />
             )}
-            {signUpStep === 4 && (
+            {signUpStep === 4 && !isVerifyingManager && (
               <SignUpRole
                 userName={signUpData.name}
+                onComplete={role => {
+                  if (role === "USER") {
+                    setIsSigningUp(false);
+                    setIsLoggedIn(true);
+                    setSignUpStep(1); // 다음 회원가입을 위해 초기화
+                  }
+                }}
+                onVerifyManager={() => {
+                  setIsVerifyingManager(true);
+                }}
+                onBack={() => setSignUpStep(3)}
+              />
+            )}
+            {isVerifyingManager && (
+              <VerifyContainer
                 onComplete={() => {
+                  setIsVerifyingManager(false);
                   setIsSigningUp(false);
                   setIsLoggedIn(true);
                   setSignUpStep(1); // 다음 회원가입을 위해 초기화
                 }}
-                onBack={() => setSignUpStep(3)}
+                onBack={() => {
+                  setIsVerifyingManager(false);
+                }}
               />
             )}
           </>
@@ -202,14 +204,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
-        {activeTab !== "home" && <Header />}
         {renderScreen()}
-        {activeTab !== "home" && (
-          <BottomNavigation
-            activeTab={activeTab}
-            onTabPress={setActiveTab}
-          />
-        )}
         <StatusBar style="auto" />
       </View>
     </ThemeProvider>
