@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
+import * as Font from "expo-font";
 import {
   MyPageScreen,
   HomeScreen,
@@ -20,6 +21,17 @@ export default function App() {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        KoreanYNSJG5R: require("./assets/fonts/KoreanYNSJG5R.ttf"),
+      });
+      setFontsLoaded(true);
+    };
+    loadFonts();
+  }, []);
 
   // 회원가입 정보 state
   const [signUpData, setSignUpData] = useState({
@@ -44,15 +56,25 @@ export default function App() {
       case "home":
         return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
       case "usage":
-        return <MyPageScreen />;
+        return <MyPageScreen activeTab={activeTab} />;
       case "records":
-        return <MedicalRecordsScreen onTabPress={setActiveTab} />;
+        return (
+          <MedicalRecordsScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
+        );
       case "profile":
-        return <MyPageScreen />;
+        return <MyPageScreen activeTab={activeTab} />;
       default:
         return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
     }
   };
+
+  // 폰트가 로드되지 않았으면 로딩 화면 표시
+  if (!fontsLoaded) {
+    return null; // 또는 로딩 스피너 표시
+  }
 
   // 로그인되지 않았으면 로그인 화면 표시
   if (!isLoggedIn) {
@@ -139,7 +161,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
-        {activeTab !== "home" && <Header />}
+        <Header activeTab={activeTab} />
         {renderScreen()}
         {activeTab !== "home" && (
           <BottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />
