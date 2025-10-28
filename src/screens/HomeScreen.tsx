@@ -131,7 +131,7 @@ const NoReservationText = styled.Text`
   font-size: 16px;
 `;
 
-const HospitalCard = styled.View`
+const HospitalCard = styled.TouchableOpacity`
   background-color: white;
   border-radius: 12px;
   padding: 20px;
@@ -160,9 +160,14 @@ const HospitalDescription = styled.Text`
 interface HomeScreenProps {
   activeTab: string;
   onTabPress: (tab: string) => void;
+  onHospitalPharmacyPress?: () => void;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({
+  activeTab,
+  onTabPress,
+  onHospitalPharmacyPress,
+}) => {
   return (
     <ScreenContainer>
       {/* Main Content */}
@@ -190,7 +195,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress })
         >
           <BannerContent>
             <BannerTitle>동행자 매칭</BannerTitle>
-            <BannerDescription>메디고와 함께 검증된 동행자를 찾아보세요</BannerDescription>
+            <BannerDescription>
+              메디고와 함께 검증된 동행자를 찾아보세요
+            </BannerDescription>
           </BannerContent>
           <Image
             source={require("../../assets/main/connect.png")}
@@ -279,7 +286,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress })
                 <RatingText>4.7</RatingText>
               </RatingSection>
             </ProfileSection>
-            <ResponseButton isOnline={false}>평균 15분 이내 응답</ResponseButton>
+            <ResponseButton isOnline={false}>
+              평균 15분 이내 응답
+            </ResponseButton>
           </CompanionCard>
         </ScrollView>
 
@@ -291,6 +300,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress })
 
         {/* 열린 병원/약국 찾기 섹션 */}
         <HospitalCard
+          onPress={onHospitalPharmacyPress}
+          activeOpacity={0.7}
           style={{
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 1 },
@@ -301,7 +312,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress })
         >
           <HospitalContent>
             <HospitalTitle>열린 병원/약국 찾기&gt;</HospitalTitle>
-            <HospitalDescription>주변에 있는 병원 / 약국이 열려있는지 확인하세요</HospitalDescription>
+            <HospitalDescription>
+              주변에 있는 병원 / 약국이 열려있는지 확인하세요
+            </HospitalDescription>
           </HospitalContent>
           <Image
             source={require("../../assets/main/ping.png")}
@@ -315,10 +328,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress })
       </ScrollContainer>
 
       {/* Bottom Navigation */}
-      <BottomNavigation
-        activeTab={activeTab}
-        onTabPress={onTabPress}
-      />
+      <BottomNavigation activeTab={activeTab} onTabPress={onTabPress} />
     </ScreenContainer>
   );
 };
