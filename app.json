@@ -13,7 +13,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "NSLocationWhenInUseUsageDescription": "현재 위치를 확인하여 주소를 설정합니다.",
+      "NSLocationAlwaysAndWhenInUseUsageDescription": "현재 위치를 확인하여 주소를 설정합니다."
     },
     "android": {
       "adaptiveIcon": {
@@ -21,8 +23,18 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET"
+      ]
     },
+    "permissions": [
+      "ACCESS_FINE_LOCATION",
+      "ACCESS_COARSE_LOCATION",
+      "INTERNET"
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     }
