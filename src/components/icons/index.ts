@@ -7,4 +7,8 @@ export { LogoIcon } from "./LogoIcon";
 export { MedigoTextIcon } from "./MedigoTextIcon";
 export { LocationIcon } from "./LocationIcon";
 export { ChevronDownIcon } from "./ChevronDownIcon";
+export { SearchIcon } from "./SearchIcon";
+export { HomeAddressIcon } from "./HomeAddressIcon";
+export { OfficeIcon } from "./OfficeIcon";
+export { LocationPinIcon } from "./LocationPinIcon";
 export { CheckIcon } from "./CheckIcon";
