@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { ScrollView, Image } from "react-native";
-import { Header } from "../components/Header";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { theme } from "../styles";
 
@@ -39,14 +38,18 @@ const CategoryButton = styled.TouchableOpacity<{ isSelected: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: ${theme.borderRadius.full}px;
-  background: ${(props: { isSelected: boolean }) => (props.isSelected ? "#063E66" : "#F5F5F5")};
-  border: 1px solid ${(props: { isSelected: boolean }) => (props.isSelected ? "#063E66" : "#E0E0E0")};
+  background: ${(props: { isSelected: boolean }) =>
+    props.isSelected ? "#063E66" : "#F5F5F5"};
+  border: 1px solid
+    ${(props: { isSelected: boolean }) =>
+      props.isSelected ? "#063E66" : "#E0E0E0"};
 `;
 
 const CategoryButtonText = styled.Text<{ isSelected: boolean }>`
   font-size: ${theme.fontSize.md}px;
   font-weight: ${theme.fontWeight.medium};
-  color: ${(props: { isSelected: boolean }) => (props.isSelected ? theme.colors.white : theme.colors.text.primary)};
+  color: ${(props: { isSelected: boolean }) =>
+    props.isSelected ? theme.colors.white : theme.colors.text.primary};
 `;
 
 const NotificationList = styled.View`
@@ -57,11 +60,6 @@ const NotificationItem = styled.View`
   background-color: ${theme.colors.white};
   border-radius: ${theme.borderRadius.lg}px;
   padding: ${theme.spacing.md}px;
-  shadow-color: #000;
-  shadow-offset: 0px 1px;
-  shadow-opacity: 0.1;
-  shadow-radius: 4px;
-  elevation: 2;
   flex-direction: row;
   gap: ${theme.spacing.md}px;
 `;
@@ -224,15 +222,15 @@ export const Notification = ({ onTabPress }: NotificationProps) => {
   const filteredNotifications =
     selectedCategory === "all"
       ? dummyNotifications
-      : dummyNotifications.filter(notification => notification.category === selectedCategory);
+      : dummyNotifications.filter(
+          (notification) => notification.category === selectedCategory
+        );
 
   return (
     <Container>
-      <Header></Header>
-
       <ContentContainer>
         <CategoryContainer>
-          {categories.map(category => {
+          {categories.map((category) => {
             const isSelected = selectedCategory === category.id;
             return (
               <CategoryButton
@@ -252,7 +250,9 @@ export const Notification = ({ onTabPress }: NotificationProps) => {
                     : undefined
                 }
               >
-                <CategoryButtonText isSelected={isSelected}>{category.label}</CategoryButtonText>
+                <CategoryButtonText isSelected={isSelected}>
+                  {category.label}
+                </CategoryButtonText>
               </CategoryButton>
             );
           })}
@@ -260,10 +260,21 @@ export const Notification = ({ onTabPress }: NotificationProps) => {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <NotificationList>
-            {filteredNotifications.map(notification => (
-              <NotificationItem key={notification.id}>
+            {filteredNotifications.map((notification) => (
+              <NotificationItem 
+                key={notification.id}
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                  elevation: 2,
+                }}
+              >
                 <IconContainer>
-                  <NotificationIcon source={getIconSource(notification.category)} />
+                  <NotificationIcon
+                    source={getIconSource(notification.category)}
+                  />
                 </IconContainer>
                 <NotificationContentContainer>
                   <NotificationHeader>
@@ -274,7 +285,9 @@ export const Notification = ({ onTabPress }: NotificationProps) => {
                       {notification.time}
                     </NotificationDateTime>
                   </NotificationHeader>
-                  <NotificationContent>{notification.content}</NotificationContent>
+                  <NotificationContent>
+                    {notification.content}
+                  </NotificationContent>
                 </NotificationContentContainer>
               </NotificationItem>
             ))}
