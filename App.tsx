@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
+import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   MyPageScreen,
@@ -27,6 +28,17 @@ export default function App() {
   const [isVerifyingManager, setIsVerifyingManager] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        KoreanYNSJG5R: require("./assets/fonts/KoreanYNSJG5R.ttf"),
+      });
+      setFontsLoaded(true);
+    };
+    loadFonts();
+  }, []);
 
   // 회원가입 정보 state
   const [signUpData, setSignUpData] = useState({
@@ -82,7 +94,12 @@ export default function App() {
       case "usage":
         return <Notification onTabPress={setActiveTab} />;
       case "records":
-        return <MedicalRecordsScreen onTabPress={setActiveTab} />;
+        return (
+          <MedicalRecordsScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
+        );
       case "profile":
         return <MyPageScreen onTabPress={setActiveTab} />;
       default:
@@ -95,6 +112,12 @@ export default function App() {
     }
   };
 
+  // 폰트가 로드되지 않았으면 로딩 화면 표시
+  if (!fontsLoaded) {
+    return null; // 또는 로딩 스피너 표시
+  }
+
+  // 로그인되지 않았으면 로그인 화면 표시
   if (!hasCompletedOnboarding) {
     return (
       <ThemeProvider theme={theme}>
@@ -103,7 +126,6 @@ export default function App() {
       </ThemeProvider>
     );
   }
-
   if (!isLoggedIn) {
     return (
       <ThemeProvider theme={theme}>
@@ -204,6 +226,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
+        <Header activeTab={activeTab} />
         {renderScreen()}
         <StatusBar style="auto" />
       </View>

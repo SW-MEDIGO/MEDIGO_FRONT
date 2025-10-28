@@ -19,11 +19,6 @@ const Card = styled.View`
   border-radius: ${theme.borderRadius.lg}px;
   padding: ${theme.spacing.lg}px;
   margin: ${theme.spacing.md}px;
-  shadow-color: #000;
-  shadow-opacity: 0.08;
-  shadow-radius: 8px;
-  shadow-offset: 0px 2px;
-  elevation: 2;
 `;
 
 const Row = styled.View`
@@ -96,56 +91,50 @@ const QuickAction = ({ label }: { label: string }) => (
   <View style={{ alignItems: "center", flex: 1 }}>
     <IconCircle />
     <View style={{ height: theme.spacing.sm }} />
-    <Text
-      size="sm"
-      color={theme.colors.text.secondary}
-    >
+    <Text size="sm" color={theme.colors.text.secondary}>
       {label}
     </Text>
   </View>
 );
 
 const MenuItem = ({ title }: { title: string }) => (
-  <ItemRow
-    activeOpacity={0.7}
-    onPress={() => {}}
-  >
+  <ItemRow activeOpacity={0.7} onPress={() => {}}>
     <Text size="md">{title}</Text>
     <RightArrow />
   </ItemRow>
 );
 
 interface MyPageScreenProps {
+  activeTab?: string;
   onTabPress?: (tab: string) => void;
 }
 
-export const MyPageScreen = ({ onTabPress }: MyPageScreenProps) => {
+export const MyPageScreen = ({ activeTab, onTabPress }: MyPageScreenProps) => {
   return (
     <ScreenContainer>
       <Header></Header>
 
       <Scroll>
-        <Card>
+        <Card
+          style={{
+            shadowColor: "#000",
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 2 },
+            elevation: 2,
+          }}
+        >
           <Row>
             <Avatar>
-              <Text
-                weight="bold"
-                color={theme.colors.white}
-              >
+              <Text weight="bold" color={theme.colors.white}>
                 장
               </Text>
             </Avatar>
             <View>
-              <Text
-                size="lg"
-                weight="bold"
-              >
+              <Text size="lg" weight="bold">
                 장은성
               </Text>
-              <Text
-                size="sm"
-                color={theme.colors.text.secondary}
-              >
+              <Text size="sm" color={theme.colors.text.secondary}>
                 마이페이지
               </Text>
             </View>

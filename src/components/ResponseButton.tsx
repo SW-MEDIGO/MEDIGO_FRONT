@@ -25,19 +25,11 @@ const OfflineButton = styled.View`
   background-color: #4a4a4a;
   padding-top: 4px;
   padding-bottom: 4px;
-  width: 160;
+  width: 160px;
   border-radius: 10px;
-  shadow-color: #000;
-  shadow-offset: 0px 0px;
-  shadow-opacity: 0.15;
-  shadow-radius: 1px;
-  elevation: 1;
 `;
 
-export const ResponseButton: React.FC<ResponseButtonProps> = ({
-  isOnline,
-  children,
-}) => {
+export const ResponseButton = ({ isOnline, children }: ResponseButtonProps) => {
   if (isOnline) {
     return (
       <ButtonContainer>
@@ -65,7 +57,15 @@ export const ResponseButton: React.FC<ResponseButtonProps> = ({
 
   return (
     <ButtonContainer>
-      <OfflineButton>
+      <OfflineButton
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.15,
+          shadowRadius: 1,
+          elevation: 1,
+        }}
+      >
         <ResponseText>{children}</ResponseText>
       </OfflineButton>
     </ButtonContainer>
