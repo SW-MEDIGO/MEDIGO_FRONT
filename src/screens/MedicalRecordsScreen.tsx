@@ -4,6 +4,7 @@ import { ScrollView, TouchableOpacity, RefreshControl } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 import { BottomNavigation } from "../components/BottomNavigation";
+import { Header } from "../components/Header";
 import { theme } from "../styles";
 interface MedicalRecord {
   id: string;
@@ -118,7 +119,12 @@ const RecordIcon = styled.View`
 `;
 
 const DocumentIcon = () => (
-  <Svg width="24" height="28" viewBox="0 0 24 28" fill="none">
+  <Svg
+    width="24"
+    height="28"
+    viewBox="0 0 24 28"
+    fill="none"
+  >
     <Path
       d="M3 1.59499e-06C2.20435 1.59499e-06 1.44129 0.316072 0.87868 0.878681C0.316071 1.44129 0 2.20435 0 3V25C0 25.7957 0.316071 26.5587 0.87868 27.1213C1.44129 27.6839 2.20435 28 3 28H21C21.7956 28 22.5587 27.6839 23.1213 27.1213C23.6839 26.5587 24 25.7957 24 25V9C24.0002 8.86859 23.9746 8.73842 23.9245 8.61694C23.8744 8.49546 23.8008 8.38504 23.708 8.292L15.708 0.292002C15.615 0.199198 15.5045 0.125642 15.3831 0.0755384C15.2616 0.025435 15.1314 -0.000233099 15 1.59499e-06H3Z"
       fill="#3EB5C5"
@@ -155,8 +161,7 @@ const PaginationButton = styled.TouchableOpacity<PaginationButtonProps>`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: ${(props: PaginationButtonProps) =>
-    props.isActive ? "#0BC1BF" : "transparent"};
+  background-color: ${(props: PaginationButtonProps) => (props.isActive ? "#0BC1BF" : "transparent")};
   align-items: center;
   justify-content: center;
   margin-left: 4px;
@@ -170,8 +175,7 @@ interface PaginationTextProps {
 const PaginationText = styled.Text<PaginationTextProps>`
   font-size: ${theme.fontSize.md}px;
   font-weight: 300;
-  color: ${(props: PaginationTextProps) =>
-    props.isActive ? theme.colors.white : "#063E66"};
+  color: ${(props: PaginationTextProps) => (props.isActive ? theme.colors.white : "#063E66")};
 `;
 
 const ArrowButton = styled.TouchableOpacity`
@@ -314,9 +318,7 @@ const mockRecords: MedicalRecord[] = [
 
 const ITEMS_PER_PAGE = 4;
 
-export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
-  onTabPress,
-}) => {
+export const MedicalRecordsScreen = ({ onTabPress }: MedicalRecordsScreenProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -385,6 +387,8 @@ export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
 
   return (
     <Container>
+      <Header></Header>
+
       <ContentContainer>
         <CheckButton
           colors={["#00A6D8", "#0BC1BF"]}
@@ -397,11 +401,14 @@ export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
         <ScrollView
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+            />
           }
         >
           <RecordsList>
-            {currentRecords.map((record) => (
+            {currentRecords.map(record => (
               <RecordCard
                 key={record.id}
                 style={{
@@ -415,10 +422,7 @@ export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
                 <RecordInfo>
                   <CompanionContainer>
                     <CompanionLabel>동행자</CompanionLabel>
-                    <CompanionName>
-                      {" "}
-                      • {record.companion.split("• ")[1]}
-                    </CompanionName>
+                    <CompanionName> • {record.companion.split("• ")[1]}</CompanionName>
                   </CompanionContainer>
                   <HospitalText>{record.hospital}</HospitalText>
                   <DateText>{record.date}</DateText>
@@ -434,7 +438,10 @@ export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
         {renderPagination()}
       </ContentContainer>
 
-      <BottomNavigation activeTab="records" onTabPress={onTabPress} />
+      <BottomNavigation
+        activeTab="records"
+        onTabPress={onTabPress}
+      />
     </Container>
   );
 };

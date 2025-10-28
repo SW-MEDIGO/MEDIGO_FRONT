@@ -8,6 +8,7 @@ import { theme } from "../../styles";
 interface SignUpRoleProps {
   userName: string;
   onComplete: (role: "USER" | "MANAGER") => void;
+  onVerifyManager: () => void;
   onBack: () => void;
 }
 
@@ -99,7 +100,7 @@ const ButtonWrapper = styled.View`
   background-color: ${theme.colors.background};
 `;
 
-export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) => {
+export const SignUpRole = ({ userName, onComplete, onVerifyManager, onBack }: SignUpRoleProps) => {
   const [selectedRole, setSelectedRole] = useState<RoleType>(null);
 
   const handleRoleSelect = (role: RoleType) => {
@@ -107,9 +108,20 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
   };
 
   const handleComplete = () => {
-    if (selectedRole) {
+    if (selectedRole === "USER") {
       onComplete(selectedRole);
+    } else if (selectedRole === "MANAGER") {
+      onVerifyManager();
     }
+  };
+
+  const getButtonTitle = () => {
+    if (selectedRole === "USER") {
+      return "시작하기";
+    } else if (selectedRole === "MANAGER") {
+      return "인증하기";
+    }
+    return "시작하기";
   };
 
   return (
@@ -229,7 +241,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
 
       <ButtonWrapper>
         <Button
-          title="시작하기"
+          title={getButtonTitle()}
           onPress={handleComplete}
           disabled={selectedRole === null}
         />
