@@ -11,3 +11,4 @@ export { OnboardingContainer } from "./Onboarding/OnboardingContainer";
 export { VerifyContainer } from "./Verify/VerifyContainer";
 export { CompanionMatching } from "./CompanionMatching";
 export { CompanionMatchingDone } from "./CompanionMatchingDone";
+export { PrescriptionScreen } from "./prescription";
