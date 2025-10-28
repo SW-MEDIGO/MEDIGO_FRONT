@@ -13,6 +13,7 @@ interface MedicalRecord {
 }
 
 interface MedicalRecordsScreenProps {
+  activeTab: string;
   onTabPress: (tab: string) => void;
 }
 
@@ -315,6 +316,7 @@ const mockRecords: MedicalRecord[] = [
 const ITEMS_PER_PAGE = 4;
 
 export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
+  activeTab,
   onTabPress,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);

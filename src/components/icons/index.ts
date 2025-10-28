@@ -4,3 +4,6 @@ export { DocumentIcon } from "./DocumentIcon";
 export { ProfileIcon } from "./ProfileIcon";
 export { BackIcon } from "./BackIcon";
 export { LogoIcon } from "./LogoIcon";
+export { MedigoTextIcon } from "./MedigoTextIcon";
+export { LocationIcon } from "./LocationIcon";
+export { ChevronDownIcon } from "./ChevronDownIcon";

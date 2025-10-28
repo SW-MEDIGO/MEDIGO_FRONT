@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { ScrollView, View, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Container, Text, Header, ResponseButton } from "../components";
+import { Container, Text, ResponseButton } from "../components";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { theme } from "../styles";
 
@@ -165,9 +165,6 @@ interface HomeScreenProps {
 export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress }) => {
   return (
     <ScreenContainer>
-      {/* Header */}
-      <Header></Header>
-
       {/* Main Content */}
       <ScrollContainer showsVerticalScrollIndicator={false}>
         {/* 동행자 매칭 배너 */}
