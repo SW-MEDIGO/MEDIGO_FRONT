@@ -164,11 +164,11 @@ interface HomeScreenProps {
   onNavigateToCompanionMatching?: () => void;
 }
 
-export const HomeScreen = ({ 
-  activeTab, 
-  onTabPress, 
+export const HomeScreen = ({
+  activeTab,
+  onTabPress,
   onHospitalPharmacyPress,
-  onNavigateToCompanionMatching 
+  onNavigateToCompanionMatching,
 }: HomeScreenProps) => {
   return (
     <ScreenContainer>

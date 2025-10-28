@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
-import MyPageScreen from "./src/screens/MyPageScreen"; 
-import FamilyScreen from "./src/screens/FamilyScreen";
-import WalletScreen from "./src/screens/WalletScreen";
-import SettingsScreen from "./src/screens/SettingsScreen";
-import ReviewScreen from "./src/screens/ReviewScreen";
-import DoctorScreen from "./src/screens/DoctorScreen";
-import PharmacyScreen from "./src/screens/PharmacyScreen";
 import * as Font from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -32,53 +25,17 @@ import {
   CompanionMatchingDone,
   PrescriptionScreen,
 } from "./src/screens";
+import FamilyScreen from "./src/screens/FamilyScreen";
+import WalletScreen from "./src/screens/WalletScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import ReviewScreen from "./src/screens/ReviewScreen";
+import DoctorScreen from "./src/screens/DoctorScreen";
+import PharmacyScreen from "./src/screens/PharmacyScreen";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 export default function App() {
-  const [route, setRoute] = useState<
-    "mypage" | "family" | "wallet" | "settings" | "review" | "doctor" | "pharmacy"
-  >("mypage");
-
-  useEffect(() => {
-    (globalThis as any).__routeToWallet = () => setRoute("wallet");
-    (globalThis as any).__routeToFamily = () => setRoute("family");
-    (globalThis as any).__routeToSettings = () => setRoute("settings");
-    (globalThis as any).__routeToReview = () => setRoute("review");
-    (globalThis as any).__routeToDoctor = () => setRoute("doctor");
-    (globalThis as any).__routeToPharmacy = () => setRoute("pharmacy");
-    (globalThis as any).__routeToMyPage = () => setRoute("mypage");
-    return () => {
-      delete (globalThis as any).__routeToWallet;
-      delete (globalThis as any).__routeToFamily;
-      delete (globalThis as any).__routeToSettings;
-      delete (globalThis as any).__routeToReview;
-      delete (globalThis as any).__routeToDoctor;
-      delete (globalThis as any).__routeToPharmacy;
-      delete (globalThis as any).__routeToMyPage;
-    };
-  }, []);
-
-  return (
-    <ThemeProvider theme={theme}>
-      {route === "mypage" && (
-        <MyPageScreen
-          onOpenFamily={() => setRoute("family")}
-          onOpenWallet={() => setRoute("wallet")}
-          onOpenSettings={() => setRoute("settings")}
-          onOpenReview={() => setRoute("review")}
-          onOpenDoctor={() => setRoute("doctor")}
-          onOpenPharmacy={() => setRoute("pharmacy")}
-        />
-      )}
-      {route === "family" && <FamilyScreen onBack={() => setRoute("mypage")} />}
-      {route === "wallet" && <WalletScreen onBack={() => setRoute("mypage")} />}
-      {route === "settings" && <SettingsScreen onBack={() => setRoute("mypage")} />}
-      {route === "review" && <ReviewScreen onBack={() => setRoute("mypage")} />}
-      {route === "doctor" && <DoctorScreen onBack={() => setRoute("mypage")} />}
-      {route === "pharmacy" && <PharmacyScreen onBack={() => setRoute("mypage")} />}
-      <StatusBar style="auto" />
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -86,7 +43,18 @@ export default function App() {
   const [isVerifyingManager, setIsVerifyingManager] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
-  const [currentScreen, setCurrentScreen] = useState("home");
+  const [currentScreen, setCurrentScreen] = useState<
+    | "home"
+    | "companion-matching"
+    | "companion-matching-done"
+    | "prescription"
+    | "family"
+    | "wallet"
+    | "settings"
+    | "review"
+    | "doctor"
+    | "pharmacy"
+  >("home");
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [showAddressSetting, setShowAddressSetting] = useState(false);
   const [showLocationMap, setShowLocationMap] = useState(false);
@@ -408,6 +376,37 @@ export default function App() {
     setShowAddressDetail(true);
   };
 
+  // MyPage 관련 핸들러들
+  const handleMyPageNavigation = (screen: string) => {
+    switch (screen) {
+      case "family":
+        setCurrentScreen("family");
+        break;
+      case "wallet":
+        setCurrentScreen("wallet");
+        break;
+      case "settings":
+        setCurrentScreen("settings");
+        break;
+      case "review":
+        setCurrentScreen("review");
+        break;
+      case "doctor":
+        setCurrentScreen("doctor");
+        break;
+      case "pharmacy":
+        setCurrentScreen("pharmacy");
+        break;
+      default:
+        setCurrentScreen("home");
+    }
+  };
+
+  const handleMyPageBack = () => {
+    setCurrentScreen("home");
+    setActiveTab("profile");
+  };
+
   const renderScreen = () => {
     // 현재 화면이 서브 화면인 경우
     if (currentScreen === "companion-matching") {
@@ -447,6 +446,31 @@ export default function App() {
       );
     }
 
+    // MyPage 서브 화면들
+    if (currentScreen === "family") {
+      return <FamilyScreen onBack={handleMyPageBack} />;
+    }
+
+    if (currentScreen === "wallet") {
+      return <WalletScreen onBack={handleMyPageBack} />;
+    }
+
+    if (currentScreen === "settings") {
+      return <SettingsScreen onBack={handleMyPageBack} />;
+    }
+
+    if (currentScreen === "review") {
+      return <ReviewScreen onBack={handleMyPageBack} />;
+    }
+
+    if (currentScreen === "doctor") {
+      return <DoctorScreen onBack={handleMyPageBack} />;
+    }
+
+    if (currentScreen === "pharmacy") {
+      return <PharmacyScreen onBack={handleMyPageBack} />;
+    }
+
     // 탭 기반 화면
     switch (activeTab) {
       case "home":
@@ -455,7 +479,9 @@ export default function App() {
             activeTab={activeTab}
             onTabPress={setActiveTab}
             onHospitalPharmacyPress={handleHospitalPharmacyPress}
-            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
+            onNavigateToCompanionMatching={() =>
+              setCurrentScreen("companion-matching")
+            }
           />
         );
       case "usage":
@@ -465,21 +491,34 @@ export default function App() {
           <MedicalRecordsScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
-            onNavigateToPrescription={data => {
+            onNavigateToPrescription={(data) => {
               setPrescriptionData(data);
               setCurrentScreen("prescription");
             }}
           />
         );
       case "profile":
-        return <MyPageScreen onTabPress={setActiveTab} />;
+        return (
+          <MyPageScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+            onOpenFamily={() => handleMyPageNavigation("family")}
+            onOpenWallet={() => handleMyPageNavigation("wallet")}
+            onOpenSettings={() => handleMyPageNavigation("settings")}
+            onOpenReview={() => handleMyPageNavigation("review")}
+            onOpenDoctor={() => handleMyPageNavigation("doctor")}
+            onOpenPharmacy={() => handleMyPageNavigation("pharmacy")}
+          />
+        );
       default:
         return (
           <HomeScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
             onHospitalPharmacyPress={handleHospitalPharmacyPress}
-            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
+            onNavigateToCompanionMatching={() =>
+              setCurrentScreen("companion-matching")
+            }
           />
         );
     }
@@ -649,7 +688,13 @@ export default function App() {
           <>
             {currentScreen === "companion-matching" ||
             currentScreen === "companion-matching-done" ||
-            currentScreen === "prescription" ? null : (
+            currentScreen === "prescription" ||
+            currentScreen === "family" ||
+            currentScreen === "wallet" ||
+            currentScreen === "settings" ||
+            currentScreen === "review" ||
+            currentScreen === "doctor" ||
+            currentScreen === "pharmacy" ? null : (
               <Header
                 activeTab={activeTab}
                 currentLocation={currentLocation}
