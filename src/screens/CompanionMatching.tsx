@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   BackHandler,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { theme } from "../styles";
@@ -19,6 +20,16 @@ import { Text } from "../components";
 
 interface CompanionMatchingProps {
   navigation?: any;
+  currentCoordinates?: { lat: number; lng: number };
+}
+
+interface Facility {
+  id: string;
+  name: string;
+  address: string;
+  distance: string;
+  isOpen: boolean;
+  hours?: string;
 }
 
 const ScreenContainer = styled(SafeAreaView)`
@@ -350,7 +361,13 @@ const DateTimeText = styled.Text`
   color: ${theme.colors.text.primary};
 `;
 
-export const CompanionMatching = ({ navigation }: CompanionMatchingProps) => {
+// 카카오 REST API 키
+const KAKAO_REST_KEY = "eaacbe68b85bb0c87cb09c51b94a6c2e";
+
+export const CompanionMatching = ({
+  navigation,
+  currentCoordinates = { lat: 36.3504119, lng: 127.3845475 },
+}: CompanionMatchingProps) => {
   const [locationType, setLocationType] = useState<"home" | "current">("home");
   const [hospitalName, setHospitalName] = useState("");
   const [hospitalAddress, setHospitalAddress] = useState("");
@@ -362,6 +379,8 @@ export const CompanionMatching = ({ navigation }: CompanionMatchingProps) => {
 
   // Bottom sheets
   const [showFacilitiesSheet, setShowFacilitiesSheet] = useState(false);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
+  const [facilitiesLoading, setFacilitiesLoading] = useState(false);
 
   // Checkboxes
   const [agreePersonalInfo, setAgreePersonalInfo] = useState(false);
@@ -394,32 +413,64 @@ export const CompanionMatching = ({ navigation }: CompanionMatchingProps) => {
     return () => backHandler.remove();
   }, [navigation]);
 
-  const mockFacilities = [
-    {
-      id: "1",
-      name: "서울대학교병원",
-      address: "서울특별시 종로구 대학로 101",
-      distance: "1.2km",
-      isOpen: true,
-      hours: "09:00 - 18:00",
-    },
-    {
-      id: "2",
-      name: "세브란스병원",
-      address: "서울특별시 강남구 봉은사로 138",
-      distance: "2.5km",
-      isOpen: true,
-      hours: "09:00 - 18:00",
-    },
-    {
-      id: "3",
-      name: "삼성서울병원",
-      address: "서울특별시 강남구 일원로 81",
-      distance: "3.8km",
-      isOpen: true,
-      hours: "09:00 - 17:00",
-    },
-  ];
+  // 병원 검색 함수
+  const searchHospitals = async () => {
+    setFacilitiesLoading(true);
+    try {
+      const radius = 5000; // 5km 반경
+
+      const response = await fetch(
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent("병원")}&x=${
+          currentCoordinates.lng
+        }&y=${currentCoordinates.lat}&radius=${radius}&size=15&sort=distance`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `KakaoAK ${KAKAO_REST_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data.documents && data.documents.length > 0) {
+        const medicalFacilities: Facility[] = data.documents.map((place: any, index: number) => {
+          const distance = place.distance ? `${(parseInt(place.distance) / 1000).toFixed(1)}km` : "거리 정보 없음";
+
+          return {
+            id: place.id || `hospital_${index}`,
+            name: place.place_name,
+            address: place.address_name,
+            distance: distance,
+            isOpen: true,
+          };
+        });
+
+        setFacilities(medicalFacilities);
+        return medicalFacilities;
+      } else {
+        setFacilities([]);
+        return [];
+      }
+    } catch (error) {
+      Alert.alert("오류", "병원 정보를 가져올 수 없습니다. 다시 시도해주세요.");
+      setFacilities([]);
+      return [];
+    } finally {
+      setFacilitiesLoading(false);
+    }
+  };
+
+  // 바텀시트 열릴 때 병원 검색
+  const handleShowFacilitiesSheet = () => {
+    setShowFacilitiesSheet(true);
+    searchHospitals();
+  };
 
   const isFormValid = hospitalName && selectedDate && agreePersonalInfo;
 
@@ -438,7 +489,13 @@ export const CompanionMatching = ({ navigation }: CompanionMatchingProps) => {
       // navigation.navigate('ReservationWaiting', { reservationId: response.id });
 
       // 임시로 바로 완료 페이지로 이동
-      navigation?.navigate("CompanionMatchingDone");
+      navigation?.navigate("CompanionMatchingDone", {
+        hospitalName,
+        hospitalAddress,
+        selectedDate,
+        requestContent,
+        companionGender,
+      });
     } catch (error) {
       // Error handling
     } finally {
@@ -495,7 +552,7 @@ export const CompanionMatching = ({ navigation }: CompanionMatchingProps) => {
                   onChangeText={setHospitalName}
                   placeholderTextColor={theme.colors.text.secondary}
                 />
-                <ActionButton onPress={() => setShowFacilitiesSheet(true)}>
+                <ActionButton onPress={handleShowFacilitiesSheet}>
                   <ActionButtonText>근처 병원/약국 찾기</ActionButtonText>
                 </ActionButton>
               </InputRow>
@@ -728,27 +785,41 @@ export const CompanionMatching = ({ navigation }: CompanionMatchingProps) => {
               <BottomSheetTitle>근처 병원/약국 찾기</BottomSheetTitle>
               <CloseButton onPress={() => setShowFacilitiesSheet(false)}>×</CloseButton>
             </BottomSheetHeader>
-            <FacilityList>
-              {mockFacilities.map(facility => (
-                <FacilityItem
-                  key={facility.id}
-                  onPress={() => {
-                    setHospitalName(facility.name);
-                    setHospitalAddress(facility.address);
-                    setShowFacilitiesSheet(false);
-                  }}
-                >
-                  <FacilityName>{facility.name}</FacilityName>
-                  <FacilityAddress>{facility.address}</FacilityAddress>
-                  <FacilityDetails>
-                    <DistanceText>{facility.distance}</DistanceText>
-                    <Badge isOpen={facility.isOpen}>
-                      <BadgeText>{facility.isOpen ? "영업중" : "영업 종료"}</BadgeText>
-                    </Badge>
-                  </FacilityDetails>
-                </FacilityItem>
-              ))}
-            </FacilityList>
+            {facilitiesLoading ? (
+              <View style={{ alignItems: "center", justifyContent: "center", padding: 40 }}>
+                <ActivityIndicator
+                  size="large"
+                  color={theme.colors.primary}
+                />
+                <HelperText style={{ marginTop: 16 }}>병원을 검색하고 있습니다...</HelperText>
+              </View>
+            ) : facilities.length === 0 ? (
+              <View style={{ alignItems: "center", justifyContent: "center", padding: 40 }}>
+                <HelperText>근처 병원을 찾을 수 없습니다.</HelperText>
+              </View>
+            ) : (
+              <FacilityList>
+                {facilities.map(facility => (
+                  <FacilityItem
+                    key={facility.id}
+                    onPress={() => {
+                      setHospitalName(facility.name);
+                      setHospitalAddress(facility.address);
+                      setShowFacilitiesSheet(false);
+                    }}
+                  >
+                    <FacilityName>{facility.name}</FacilityName>
+                    <FacilityAddress>{facility.address}</FacilityAddress>
+                    <FacilityDetails>
+                      <DistanceText>{facility.distance}</DistanceText>
+                      <Badge isOpen={facility.isOpen}>
+                        <BadgeText>{facility.isOpen ? "영업중" : "영업 종료"}</BadgeText>
+                      </Badge>
+                    </FacilityDetails>
+                  </FacilityItem>
+                ))}
+              </FacilityList>
+            )}
           </BottomSheet>
         </BottomSheetOverlay>
       </Modal>

@@ -12,3 +12,6 @@ export { HomeAddressIcon } from "./HomeAddressIcon";
 export { OfficeIcon } from "./OfficeIcon";
 export { LocationPinIcon } from "./LocationPinIcon";
 export { CheckIcon } from "./CheckIcon";
+export { BroadcastIcon } from "./BroadcastIcon";
+export { HeartIcon } from "./HeartIcon";
+export { UserIcon } from "./UserIcon";

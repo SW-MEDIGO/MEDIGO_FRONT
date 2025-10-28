@@ -100,18 +100,9 @@ const IC_WALLET = require("../../assets/wallet.png");
 const IC_GEAR = require("../../assets/setting.png");
 
 /* ✅ QuickAction: 아이콘 + 터치 가능 */
-const QuickAction = ({
-  label,
-  icon,
-  onPress,
-}: {
-  label: string;
-  icon: any;
-  onPress?: () => void;
-}) => (
+const QuickAction = ({ label, icon, onPress }: { label: string; icon: any; onPress?: () => void }) => (
   <Pressable
     onPress={() => {
-      console.log("QuickAction pressed:", label);
       onPress?.();
     }}
     android_ripple={{ color: "#00000011", borderless: false }}
@@ -125,21 +116,21 @@ const QuickAction = ({
       />
     </IconCircle>
     <View style={{ height: theme.spacing.sm }} />
-    <Text size="sm" color={theme.colors.text.secondary}>
+    <Text
+      size="sm"
+      color={theme.colors.text.secondary}
+    >
       {label}
     </Text>
   </Pressable>
 );
 
 /* ✅ MenuItem: onPress 받도록 */
-const MenuItem = ({
-  title,
-  onPress,
-}: {
-  title: string;
-  onPress?: () => void;
-}) => (
-  <ItemRow activeOpacity={0.7} onPress={onPress}>
+const MenuItem = ({ title, onPress }: { title: string; onPress?: () => void }) => (
+  <ItemRow
+    activeOpacity={0.7}
+    onPress={onPress}
+  >
     <Text size="md">{title}</Text>
     <RightArrow />
   </ItemRow>
@@ -154,6 +145,7 @@ interface MyPageScreenProps {
   onOpenReview?: () => void;
   onOpenDoctor?: () => void;
   onOpenPharmacy?: () => void;
+  userName?: string;
 }
 
 export const MyPageScreen = ({
@@ -165,6 +157,7 @@ export const MyPageScreen = ({
   onOpenReview,
   onOpenDoctor,
   onOpenPharmacy,
+  userName = "사용자",
 }: MyPageScreenProps) => {
   return (
     <ScreenContainer>
@@ -183,15 +176,24 @@ export const MyPageScreen = ({
         >
           <Row>
             <Avatar>
-              <Text weight="bold" color={theme.colors.white}>
-                장
+              <Text
+                weight="bold"
+                color={theme.colors.white}
+              >
+                {userName.charAt(0)}
               </Text>
             </Avatar>
             <View>
-              <Text size="lg" weight="bold">
-                장은성
+              <Text
+                size="lg"
+                weight="bold"
+              >
+                {userName}
               </Text>
-              <Text size="sm" color={theme.colors.text.secondary}>
+              <Text
+                size="sm"
+                color={theme.colors.text.secondary}
+              >
                 마이페이지
               </Text>
             </View>
@@ -211,22 +213,41 @@ export const MyPageScreen = ({
               onPress={onOpenWallet}
             />
             <View style={{ width: theme.spacing.lg }} />
-            <QuickAction label="설정" icon={IC_GEAR} onPress={onOpenSettings} />
+            <QuickAction
+              label="설정"
+              icon={IC_GEAR}
+              onPress={onOpenSettings}
+            />
           </QuickActions>
         </Card>
 
         <Menu>
-          <MenuItem title="내 후기" onPress={onOpenReview} />
+          <MenuItem
+            title="내 후기"
+            onPress={onOpenReview}
+          />
           <Divider />
-          <MenuItem title="단골 의사" onPress={onOpenDoctor} />
+          <MenuItem
+            title="단골 의사"
+            onPress={onOpenDoctor}
+          />
           <Divider />
-          <MenuItem title="단골 약국" onPress={onOpenPharmacy} />
+          <MenuItem
+            title="단골 약국"
+            onPress={onOpenPharmacy}
+          />
         </Menu>
 
         <Menu>
-          <MenuItem title="고객센터" onPress={() => Alert.alert("고객센터")} />
+          <MenuItem
+            title="고객센터"
+            onPress={() => Alert.alert("고객센터")}
+          />
           <Divider />
-          <MenuItem title="공지사항" onPress={() => Alert.alert("공지사항")} />
+          <MenuItem
+            title="공지사항"
+            onPress={() => Alert.alert("공지사항")}
+          />
           <Divider />
           <MenuItem
             title="자주하는 질문"

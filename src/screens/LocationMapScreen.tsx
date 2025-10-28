@@ -8,10 +8,7 @@ import Svg, { Path } from "react-native-svg";
 
 interface LocationMapScreenProps {
   onBackPress?: () => void;
-  onLocationConfirm?: (
-    address: string,
-    coordinates: { lat: number; lng: number }
-  ) => void;
+  onLocationConfirm?: (address: string, coordinates: { lat: number; lng: number }) => void;
 }
 
 const ScreenContainer = styled.View`
@@ -76,7 +73,12 @@ const LocationButton = styled.TouchableOpacity`
 
 // 현재 위치 아이콘 컴포넌트
 const LocationIcon = () => (
-  <Svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+  <Svg
+    width="22"
+    height="22"
+    viewBox="0 0 22 22"
+    fill="none"
+  >
     <Path
       d="M1 11H4M18 11H21M11 1V4M11 18V21"
       stroke="black"
@@ -171,10 +173,7 @@ const KAKAO_JS_KEY = "9f545dda265aebc67ed17146a2e8ce38";
 // 카카오 REST API 키 (주소변환용) - 카카오 디벨로퍼스에서 발급받으세요
 const KAKAO_REST_KEY = "eaacbe68b85bb0c87cb09c51b94a6c2e"; // 임시로 같은 키 사용, 실제로는 REST 키가 필요
 
-export const LocationMapScreen = ({
-  onBackPress,
-  onLocationConfirm,
-}: LocationMapScreenProps) => {
+export const LocationMapScreen = ({ onBackPress, onLocationConfirm }: LocationMapScreenProps) => {
   const [currentAddress, setCurrentAddress] = useState("주소를 가져오는 중...");
   const [detailAddress, setDetailAddress] = useState("위치를 확인해주세요");
   const [currentCoordinates, setCurrentCoordinates] = useState({
@@ -184,11 +183,7 @@ export const LocationMapScreen = ({
   const webViewRef = useRef<WebView>(null);
 
   // 개선된 좌표→주소 변환 함수 (다중 API 지원)
-  const convertCoordinatesToAddress = async (
-    latitude: number,
-    longitude: number,
-    maxRetries = 3
-  ) => {
+  const convertCoordinatesToAddress = async (latitude: number, longitude: number, maxRetries = 3) => {
     let lastError;
 
     // 로딩 상태 표시
@@ -197,8 +192,6 @@ export const LocationMapScreen = ({
 
     // 1차 시도: Expo Location API (가장 안정적)
     try {
-      console.log("🌍 Expo Location으로 주소 변환 시도:", latitude, longitude);
-
       const geocodeResult = await Location.reverseGeocodeAsync({
         latitude,
         longitude,
@@ -206,7 +199,6 @@ export const LocationMapScreen = ({
 
       if (geocodeResult && geocodeResult.length > 0) {
         const result = geocodeResult[0];
-        console.log("✅ Expo Location 주소 변환 성공:", result);
 
         // 한국어 주소 포맷팅 (중복 제거)
         let roadAddress = "";
@@ -228,28 +220,20 @@ export const LocationMapScreen = ({
 
           for (const part of allParts) {
             // 이미 추가된 부분과 중복되거나 포함되는지 확인
-            const isDuplicate = uniqueParts.some((existing) => {
+            const isDuplicate = uniqueParts.some(existing => {
               // 완전히 같은 경우
               if (existing === part) return true;
 
               // 한쪽이 다른 쪽을 포함하는 경우
-              if (existing.includes(part) || part.includes(existing))
-                return true;
+              if (existing.includes(part) || part.includes(existing)) return true;
 
               // 도로명/번지 중복 체크 (예: "문정로89번길"과 "문정로89")
               const existingNumbers = existing.match(/\d+/g);
               const partNumbers = part.match(/\d+/g);
               if (existingNumbers && partNumbers) {
-                const existingBase = existing
-                  .replace(/\d+/g, "")
-                  .replace(/[길번지]/g, "");
-                const partBase = part
-                  .replace(/\d+/g, "")
-                  .replace(/[길번지]/g, "");
-                if (
-                  existingBase === partBase &&
-                  existingNumbers[0] === partNumbers[0]
-                ) {
+                const existingBase = existing.replace(/\d+/g, "").replace(/[길번지]/g, "");
+                const partBase = part.replace(/\d+/g, "").replace(/[길번지]/g, "");
+                if (existingBase === partBase && existingNumbers[0] === partNumbers[0]) {
                   return true;
                 }
               }
@@ -268,17 +252,10 @@ export const LocationMapScreen = ({
           detailAddress = result.region || "";
         } else {
           // 기본 포맷
-          const parts = [
-            result.street,
-            result.city,
-            result.region,
-            result.country,
-          ].filter(Boolean);
+          const parts = [result.street, result.city, result.region, result.country].filter(Boolean);
 
           roadAddress = parts.join(", ");
-          detailAddress = `${result.postalCode || ""} ${
-            result.timezone || ""
-          }`.trim();
+          detailAddress = `${result.postalCode || ""} ${result.timezone || ""}`.trim();
         }
 
         if (roadAddress) {
@@ -301,19 +278,12 @@ export const LocationMapScreen = ({
         }
       }
     } catch (error) {
-      console.warn("⚠️ Expo Location 실패, 카카오 API로 대체:", error);
       lastError = error;
     }
 
     // 2차 시도: 카카오 API (Expo가 실패한 경우)
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        console.log(
-          `🗺️ 카카오 API 주소 변환 시도 #${attempt}:`,
-          latitude,
-          longitude
-        );
-
         const response = await fetch(
           `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${longitude}&y=${latitude}&input_coord=WGS84`,
           {
@@ -330,23 +300,13 @@ export const LocationMapScreen = ({
         }
 
         const data = await response.json();
-        console.log(`카카오 API 응답 #${attempt}:`, data);
 
         if (data.documents && data.documents.length > 0) {
           const result = data.documents[0];
 
           // 도로명주소 우선, 없으면 지번주소
-          const roadAddress =
-            result.road_address?.address_name ||
-            result.address?.address_name ||
-            "주소 정보 없음";
+          const roadAddress = result.road_address?.address_name || result.address?.address_name || "주소 정보 없음";
           const jibunAddress = result.address?.address_name || "상세 주소 없음";
-
-          console.log(
-            "✅ 카카오 API 주소 변환 성공:",
-            roadAddress,
-            jibunAddress
-          );
 
           setCurrentAddress(roadAddress);
           setDetailAddress(jibunAddress);
@@ -370,24 +330,18 @@ export const LocationMapScreen = ({
           throw new Error("응답 데이터가 올바르지 않습니다");
         }
       } catch (error) {
-        console.error(`카카오 API 실패 #${attempt}:`, error);
         lastError = error;
 
         // 마지막 시도가 아니면 잠시 대기
         if (attempt < maxRetries) {
-          console.log(`${1000 * attempt}ms 후 재시도...`);
-          await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
         }
       }
     }
 
     // 3차 시도: 대안 주소 서비스
-    console.error("🔄 모든 API 실패, 대안 시도");
     try {
-      const alternativeAddress = await getAddressFromAlternativeAPI(
-        latitude,
-        longitude
-      );
+      const alternativeAddress = await getAddressFromAlternativeAPI(latitude, longitude);
       if (alternativeAddress) {
         setCurrentAddress(alternativeAddress.roadAddress);
         setDetailAddress(alternativeAddress.jibunAddress);
@@ -406,32 +360,25 @@ export const LocationMapScreen = ({
         return alternativeAddress;
       }
     } catch (altError) {
-      console.error("대안 주소 서비스도 실패:", altError);
+      // 대안 주소 서비스 실패
     }
 
     // 최종 실패 시 좌표 표시
-    console.error("❌ 모든 주소 변환 방법 실패:", lastError);
     const fallbackMessage = "주소를 찾을 수 없는 위치입니다";
-    const coordInfo = `위도 ${latitude.toFixed(6)}, 경도 ${longitude.toFixed(
-      6
-    )}`;
+    const coordInfo = `위도 ${latitude.toFixed(6)}, 경도 ${longitude.toFixed(6)}`;
 
     setCurrentAddress(fallbackMessage);
     setDetailAddress(coordInfo);
     setCurrentCoordinates({ lat: latitude, lng: longitude });
 
     // 사용자에게 재시도 옵션 제공
-    Alert.alert(
-      "주소 변환 실패",
-      "주소를 찾을 수 없습니다. 다시 시도하시겠습니까?",
-      [
-        { text: "취소", style: "cancel" },
-        {
-          text: "다시 시도",
-          onPress: () => convertCoordinatesToAddress(latitude, longitude, 1),
-        },
-      ]
-    );
+    Alert.alert("주소 변환 실패", "주소를 찾을 수 없습니다. 다시 시도하시겠습니까?", [
+      { text: "취소", style: "cancel" },
+      {
+        text: "다시 시도",
+        onPress: () => convertCoordinatesToAddress(latitude, longitude, 1),
+      },
+    ]);
 
     webViewRef.current?.postMessage(
       JSON.stringify({
@@ -447,13 +394,8 @@ export const LocationMapScreen = ({
   };
 
   // 개선된 대안 주소 API (한국 지역 기반 추정)
-  const getAddressFromAlternativeAPI = async (
-    latitude: number,
-    longitude: number
-  ) => {
+  const getAddressFromAlternativeAPI = async (latitude: number, longitude: number) => {
     try {
-      console.log("🏢 대안 주소 서비스 사용:", latitude, longitude);
-
       // 한국의 주요 도시/지역 기반 추정
       const region = getDetailedRegionFromCoordinates(latitude, longitude);
 
@@ -467,12 +409,9 @@ export const LocationMapScreen = ({
       // 기본 fallback
       return {
         roadAddress: "대한민국 내 위치",
-        jibunAddress: `위도 ${latitude.toFixed(4)}, 경도 ${longitude.toFixed(
-          4
-        )}`,
+        jibunAddress: `위도 ${latitude.toFixed(4)}, 경도 ${longitude.toFixed(4)}`,
       };
     } catch (error) {
-      console.error("대안 주소 서비스 오류:", error);
       return null;
     }
   };
@@ -486,12 +425,7 @@ export const LocationMapScreen = ({
       // 서울 구별 세분화
       if (lat >= 37.5 && lat <= 37.6 && lng >= 126.9 && lng <= 127.1) {
         district = "서울특별시 중구/종로구 일대";
-      } else if (
-        lat >= 37.45 &&
-        lat <= 37.55 &&
-        lng >= 126.8 &&
-        lng <= 126.95
-      ) {
+      } else if (lat >= 37.45 && lat <= 37.55 && lng >= 126.8 && lng <= 126.95) {
         district = "서울특별시 영등포구/마포구 일대";
       } else if (lat >= 37.5 && lat <= 37.65 && lng >= 127.0 && lng <= 127.15) {
         district = "서울특별시 성동구/광진구 일대";
@@ -658,19 +592,13 @@ export const LocationMapScreen = ({
   // React Native에서 현재 위치 가져오기
   const getCurrentLocation = async () => {
     try {
-      console.log("위치 권한 요청 시작");
-
       // 위치 권한 요청
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert(
-          "위치 권한 필요",
-          "현재 위치를 사용하려면 위치 권한이 필요합니다."
-        );
+        Alert.alert("위치 권한 필요", "현재 위치를 사용하려면 위치 권한이 필요합니다.");
         return;
       }
 
-      console.log("현재 위치 가져오기 시작");
       setCurrentAddress("현재 위치를 가져오는 중...");
       setDetailAddress("잠시만 기다려주세요");
 
@@ -680,12 +608,10 @@ export const LocationMapScreen = ({
       });
 
       const { latitude, longitude } = location.coords;
-      console.log("현재 위치 가져오기 성공:", latitude, longitude);
 
       // 주소 변환
       await convertCoordinatesToAddress(latitude, longitude);
     } catch (error) {
-      console.error("위치 가져오기 실패:", error);
       Alert.alert("오류", "현재 위치를 가져올 수 없습니다. 다시 시도해주세요.");
 
       // 기본 위치로 fallback
@@ -694,7 +620,6 @@ export const LocationMapScreen = ({
   };
 
   const handleLocationButtonPress = () => {
-    console.log("현재 위치 버튼 클릭");
     getCurrentLocation();
   };
 
@@ -752,8 +677,6 @@ export const LocationMapScreen = ({
         let map, marker, infowindow;
         
         kakao.maps.load(function() {
-            console.log('카카오맵 로드 완료');
-            
             // 지도 생성
             var mapContainer = document.getElementById('map');
             var mapOption = {
@@ -762,25 +685,22 @@ export const LocationMapScreen = ({
             };
 
             map = new kakao.maps.Map(mapContainer, mapOption);
-            console.log('지도 생성 완료');
 
             // React Native 메시지 리스너
             window.addEventListener('message', function(event) {
                 try {
                     var data = JSON.parse(event.data);
-                    console.log('WebView 메시지 받음:', data);
                     
                     if (data.type === 'updateLocation') {
                         // React Native에서 받은 좌표로 마커 업데이트
                         displayMarker(data.lat, data.lng, '표시된 위치가 맞나요?');
                     }
                 } catch (error) {
-                    console.log('메시지 파싱 에러:', error);
+                    // 메시지 파싱 에러
                 }
             });
 
             function displayMarker(lat, lng, message) {
-                console.log('마커 표시:', lat, lng);
                 
                 // 기존 마커와 인포윈도우 제거
                 if (marker) marker.setMap(null);
@@ -817,8 +737,6 @@ export const LocationMapScreen = ({
                 var lat = latlng.getLat();
                 var lng = latlng.getLng();
                 
-                console.log('지도 클릭:', lat, lng);
-                
                 // React Native로 클릭한 좌표 전송
                 if (window.ReactNativeWebView) {
                     window.ReactNativeWebView.postMessage(JSON.stringify({
@@ -836,15 +754,13 @@ export const LocationMapScreen = ({
   const handleMessage = (event: any) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
-      console.log("WebView에서 메시지 받음:", data);
 
       if (data.type === "mapClicked") {
         // 지도 클릭 시 React Native에서 주소 변환
-        console.log("지도 클릭됨, 주소 변환 시작:", data.lat, data.lng);
         convertCoordinatesToAddress(data.lat, data.lng);
       }
     } catch (error) {
-      console.log("메시지 파싱 에러:", error);
+      // 메시지 파싱 에러
     }
   };
 
@@ -857,12 +773,21 @@ export const LocationMapScreen = ({
     <ScreenContainer>
       {/* Header */}
       <HeaderContainer>
-        <BackButton onPress={onBackPress} activeOpacity={0.7}>
-          <BackIcon width={24} height={24} />
+        <BackButton
+          onPress={onBackPress}
+          activeOpacity={0.7}
+        >
+          <BackIcon
+            width={24}
+            height={24}
+          />
         </BackButton>
         <HeaderTitle>지도에서 위치 확인</HeaderTitle>
         <BackButton style={{ opacity: 0 }}>
-          <BackIcon width={24} height={24} />
+          <BackIcon
+            width={24}
+            height={24}
+          />
         </BackButton>
       </HeaderContainer>
 
@@ -880,21 +805,14 @@ export const LocationMapScreen = ({
           allowsInlineMediaPlayback={true}
           mediaPlaybackRequiresUserAction={false}
           mixedContentMode="compatibility"
-          onLoadStart={() => console.log("WebView 로딩 시작")}
-          onLoadEnd={() => console.log("WebView 로딩 완료")}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView 에러:", nativeEvent);
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView HTTP 에러:", nativeEvent);
-          }}
         />
       </MapContainer>
 
       {/* Current Location Button */}
-      <LocationButton onPress={handleLocationButtonPress} activeOpacity={0.7}>
+      <LocationButton
+        onPress={handleLocationButtonPress}
+        activeOpacity={0.7}
+      >
         <LocationIcon />
       </LocationButton>
 
@@ -902,10 +820,11 @@ export const LocationMapScreen = ({
       <BottomContainer>
         <AddressTitle>{currentAddress}</AddressTitle>
         <AddressText>{detailAddress}</AddressText>
-        <AddressNotice>
-          지도의 표시와 실제 주소가 맞는지 확인해주세요.
-        </AddressNotice>
-        <ConfirmButton onPress={handleConfirm} activeOpacity={0.8}>
+        <AddressNotice>지도의 표시와 실제 주소가 맞는지 확인해주세요.</AddressNotice>
+        <ConfirmButton
+          onPress={handleConfirm}
+          activeOpacity={0.8}
+        >
           <ConfirmButtonText>이 위치로 주소 등록</ConfirmButtonText>
         </ConfirmButton>
       </BottomContainer>
