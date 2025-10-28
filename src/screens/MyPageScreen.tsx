@@ -90,10 +90,7 @@ const QuickAction = ({ label }: { label: string }) => (
   <View style={{ alignItems: "center", flex: 1 }}>
     <IconCircle />
     <View style={{ height: theme.spacing.sm }} />
-    <Text
-      size="sm"
-      color={theme.colors.text.secondary}
-    >
+    <Text size="sm" color={theme.colors.text.secondary}>
       {label}
     </Text>
   </View>
@@ -107,10 +104,11 @@ const MenuItem = ({ title }: { title: string }) => (
 );
 
 interface MyPageScreenProps {
-  activeTab: string;
+  activeTab?: string;
+  onTabPress?: (tab: string) => void;
 }
 
-export const MyPageScreen: React.FC<MyPageScreenProps> = ({ activeTab }) => {
+export const MyPageScreen = ({ activeTab, onTabPress }: MyPageScreenProps) => {
   return (
     <ScreenContainer>
       <Scroll>
@@ -133,10 +131,7 @@ export const MyPageScreen: React.FC<MyPageScreenProps> = ({ activeTab }) => {
               <Text size="lg" weight="bold">
                 장은성
               </Text>
-              <Text
-                size="sm"
-                color={theme.colors.text.secondary}
-              >
+              <Text size="sm" color={theme.colors.text.secondary}>
                 마이페이지
               </Text>
             </View>

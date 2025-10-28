@@ -104,6 +104,8 @@ export const Header: React.FC<HeaderProps> = ({
           </>
         ) : activeTab === "records" ? (
           <TabTitle>진료 기록</TabTitle>
+        ) : activeTab === "usage" ? (
+          <TabTitle>이용/알림</TabTitle>
         ) : activeTab === "profile" ? (
           <TabTitle>내 정보</TabTitle>
         ) : (
