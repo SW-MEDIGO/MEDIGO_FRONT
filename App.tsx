@@ -21,6 +21,9 @@ import {
   HospitalPharmacyScreen,
   MedicalFacilityDetailScreen,
   MedicalFacilityListScreen,
+  CompanionMatching,
+  CompanionMatchingDone,
+  PrescriptionScreen,
 } from "./src/screens";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
@@ -34,6 +37,7 @@ export default function App() {
   const [isVerifyingManager, setIsVerifyingManager] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
+  const [currentScreen, setCurrentScreen] = useState("home");
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [showAddressSetting, setShowAddressSetting] = useState(false);
   const [showLocationMap, setShowLocationMap] = useState(false);
@@ -57,6 +61,7 @@ export default function App() {
   const [facilityLoading, setFacilityLoading] = useState(false);
   const [addressList, setAddressList] = useState<any[]>([]);
   const [editingAddress, setEditingAddress] = useState<any>(null);
+  const [prescriptionData, setPrescriptionData] = useState<any>(null);
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -355,6 +360,45 @@ export default function App() {
   };
 
   const renderScreen = () => {
+    // 현재 화면이 서브 화면인 경우
+    if (currentScreen === "companion-matching") {
+      return (
+        <CompanionMatching
+          navigation={{
+            goBack: () => setCurrentScreen("home"),
+            navigate: (screen: string) => {
+              if (screen === "CompanionMatchingDone") {
+                setCurrentScreen("companion-matching-done");
+              }
+            },
+          }}
+        />
+      );
+    }
+
+    if (currentScreen === "companion-matching-done") {
+      return (
+        <CompanionMatchingDone
+          navigation={{
+            goBack: () => setCurrentScreen("companion-matching"),
+            navigateToHome: () => setCurrentScreen("home"),
+          }}
+        />
+      );
+    }
+
+    if (currentScreen === "prescription") {
+      return (
+        <PrescriptionScreen
+          record={prescriptionData}
+          navigation={{
+            goBack: () => setCurrentScreen("home"),
+          }}
+        />
+      );
+    }
+
+    // 탭 기반 화면
     switch (activeTab) {
       case "home":
         return (
@@ -362,6 +406,7 @@ export default function App() {
             activeTab={activeTab}
             onTabPress={setActiveTab}
             onHospitalPharmacyPress={handleHospitalPharmacyPress}
+            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
           />
         );
       case "usage":
@@ -371,12 +416,23 @@ export default function App() {
           <MedicalRecordsScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
+            onNavigateToPrescription={data => {
+              setPrescriptionData(data);
+              setCurrentScreen("prescription");
+            }}
           />
         );
       case "profile":
         return <MyPageScreen onTabPress={setActiveTab} />;
       default:
-        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
+        return (
+          <HomeScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+            onHospitalPharmacyPress={handleHospitalPharmacyPress}
+            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
+          />
+        );
     }
   };
 
@@ -542,11 +598,15 @@ export default function App() {
           />
         ) : (
           <>
-            <Header
-              activeTab={activeTab}
-              currentLocation={currentLocation}
-              onLocationPress={handleLocationPress}
-            />
+            {currentScreen === "companion-matching" ||
+            currentScreen === "companion-matching-done" ||
+            currentScreen === "prescription" ? null : (
+              <Header
+                activeTab={activeTab}
+                currentLocation={currentLocation}
+                onLocationPress={handleLocationPress}
+              />
+            )}
             {renderScreen()}
           </>
         )}

@@ -12,9 +12,31 @@ interface MedicalRecord {
   date: string;
 }
 
+interface PrescriptionDetail {
+  id: string;
+  userName: string;
+  companion: string;
+  hospital: string;
+  pharmacy: string;
+  date: string;
+  symptoms: string;
+  prescriptionNotes: string;
+  medicines: Medicine[];
+  receiptImage?: string;
+  paymentAmount: string;
+}
+
+interface Medicine {
+  name: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+}
+
 interface MedicalRecordsScreenProps {
   activeTab: string;
   onTabPress: (tab: string) => void;
+  onNavigateToPrescription?: (record: PrescriptionDetail) => void;
 }
 
 const Container = styled.View`
@@ -119,7 +141,12 @@ const RecordIcon = styled.View`
 `;
 
 const DocumentIcon = () => (
-  <Svg width="24" height="28" viewBox="0 0 24 28" fill="none">
+  <Svg
+    width="24"
+    height="28"
+    viewBox="0 0 24 28"
+    fill="none"
+  >
     <Path
       d="M3 1.59499e-06C2.20435 1.59499e-06 1.44129 0.316072 0.87868 0.878681C0.316071 1.44129 0 2.20435 0 3V25C0 25.7957 0.316071 26.5587 0.87868 27.1213C1.44129 27.6839 2.20435 28 3 28H21C21.7956 28 22.5587 27.6839 23.1213 27.1213C23.6839 26.5587 24 25.7957 24 25V9C24.0002 8.86859 23.9746 8.73842 23.9245 8.61694C23.8744 8.49546 23.8008 8.38504 23.708 8.292L15.708 0.292002C15.615 0.199198 15.5045 0.125642 15.3831 0.0755384C15.2616 0.025435 15.1314 -0.000233099 15 1.59499e-06H3Z"
       fill="#3EB5C5"
@@ -156,8 +183,7 @@ const PaginationButton = styled.TouchableOpacity<PaginationButtonProps>`
   width: 32px;
   height: 32px;
   border-radius: 16px;
-  background-color: ${(props: PaginationButtonProps) =>
-    props.isActive ? "#0BC1BF" : "transparent"};
+  background-color: ${(props: PaginationButtonProps) => (props.isActive ? "#0BC1BF" : "transparent")};
   align-items: center;
   justify-content: center;
   margin-left: 4px;
@@ -171,8 +197,7 @@ interface PaginationTextProps {
 const PaginationText = styled.Text<PaginationTextProps>`
   font-size: ${theme.fontSize.md}px;
   font-weight: 300;
-  color: ${(props: PaginationTextProps) =>
-    props.isActive ? theme.colors.white : "#063E66"};
+  color: ${(props: PaginationTextProps) => (props.isActive ? theme.colors.white : "#063E66")};
 `;
 
 const ArrowButton = styled.TouchableOpacity`
@@ -194,130 +219,354 @@ const mockRecords: MedicalRecord[] = [
   {
     id: "1",
     companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    hospital: "서울대학교병원",
+    date: "2025.12.15",
   },
   {
     id: "2",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 이지은",
+    hospital: "세브란스병원",
+    date: "2025.11.28",
   },
   {
     id: "3",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 박민수",
+    hospital: "삼성서울병원",
+    date: "2025.11.15",
   },
   {
     id: "4",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 정수진",
+    hospital: "아산병원",
+    date: "2025.10.30",
   },
   {
     id: "5",
     companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    hospital: "강남세브란스병원",
+    date: "2025.10.12",
   },
   {
     id: "6",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 최영수",
+    hospital: "고대안암병원",
+    date: "2025.09.25",
   },
   {
     id: "7",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 이지은",
+    hospital: "분당서울대병원",
+    date: "2025.09.10",
   },
   {
     id: "8",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 장미희",
+    hospital: "일산백병원",
+    date: "2025.08.28",
   },
   {
     id: "9",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 박민수",
+    hospital: "경희대병원",
+    date: "2025.08.15",
   },
   {
     id: "10",
     companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    hospital: "한양대병원",
+    date: "2025.07.30",
   },
   {
     id: "11",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 정수진",
+    hospital: "이화여대병원",
+    date: "2025.07.18",
   },
   {
     id: "12",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 최영수",
+    hospital: "건국대병원",
+    date: "2025.07.05",
   },
   {
     id: "13",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 이지은",
+    hospital: "아산서울병원",
+    date: "2025.06.20",
   },
   {
     id: "14",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 장미희",
+    hospital: "성모병원",
+    date: "2025.06.10",
   },
   {
     id: "15",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 박민수",
+    hospital: "보라매병원",
+    date: "2025.05.28",
   },
   {
     id: "16",
     companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    hospital: "가톨릭의대병원",
+    date: "2025.05.15",
   },
   {
     id: "17",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 정수진",
+    hospital: "한양대구리병원",
+    date: "2025.04.30",
   },
   {
     id: "18",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 최영수",
+    hospital: "서울적십자병원",
+    date: "2025.04.18",
   },
   {
     id: "19",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 이지은",
+    hospital: "을지대병원",
+    date: "2025.04.05",
   },
   {
     id: "20",
-    companion: "동행자 • 김태원",
-    hospital: "우은식병원",
-    date: "2025.10.10",
+    companion: "동행자 • 장미희",
+    hospital: "순천향대병원",
+    date: "2025.03.22",
   },
 ];
 
 const ITEMS_PER_PAGE = 4;
 
+// record id에 따른 다양한 prescription 데이터 생성 함수
+const getPrescriptionData = (record: MedicalRecord): PrescriptionDetail => {
+  const prescriptionDataMap: { [key: string]: Partial<PrescriptionDetail> } = {
+    "1": {
+      pharmacy: "건강약국",
+      symptoms: "감기, 콧물, 인후통",
+      prescriptionNotes: "감기 증상 완화를 위한 처방입니다. 약물을 규칙적으로 복용하시기 바랍니다.",
+      medicines: [
+        { name: "아목시실린캡슐", dosage: "500mg", frequency: "하루 3회, 식후", duration: "5일" },
+        { name: "타이레놀", dosage: "500mg", frequency: "하루 3회, 식전", duration: "3일" },
+        { name: "가비린정", dosage: "1정", frequency: "하루 3회, 식후", duration: "5일" },
+      ],
+      paymentAmount: "35,000원",
+    },
+    "2": {
+      pharmacy: "온누리약국",
+      symptoms: "두통, 어지러움",
+      prescriptionNotes: "두통 완화를 위한 처방입니다. 충분한 휴식과 함께 약물을 복용하세요.",
+      medicines: [
+        { name: "판콜에이내복액", dosage: "100ml", frequency: "하루 3회, 식후", duration: "3일" },
+        { name: "부루펜", dosage: "400mg", frequency: "하루 2회, 식후", duration: "5일" },
+      ],
+      paymentAmount: "28,000원",
+    },
+    "3": {
+      pharmacy: "하나로약국",
+      symptoms: "알레르기성 비염",
+      prescriptionNotes: "알레르기 비염 치료를 위한 처방입니다. 계절 변동 시 주의하세요.",
+      medicines: [
+        { name: "지르텍정", dosage: "10mg", frequency: "하루 1회, 취침 전", duration: "7일" },
+        { name: "비포닥신나잘스프레이", dosage: "50mcg", frequency: "하루 2회, 양쪽 콧속", duration: "14일" },
+      ],
+      paymentAmount: "42,000원",
+    },
+    "4": {
+      pharmacy: "메디케어약국",
+      symptoms: "소화불량, 복통",
+      prescriptionNotes: "소화불량 치료를 위한 처방입니다. 기름진 음식을 피하고 소량씩 자주 드세요.",
+      medicines: [
+        { name: "판크리놀정", dosage: "2정", frequency: "하루 3회, 식후", duration: "5일" },
+        { name: "가스모틴정", dosage: "1정", frequency: "하루 3회, 식후", duration: "5일" },
+      ],
+      paymentAmount: "18,500원",
+    },
+    "5": {
+      pharmacy: "본약국",
+      symptoms: "비염, 축농증",
+      prescriptionNotes: "축농증 치료를 위한 처방입니다. 충분한 수분 섭취와 함께 약물을 복용하세요.",
+      medicines: [
+        { name: "시레스돈정", dosage: "37.5mg", frequency: "하루 2회, 식후", duration: "10일" },
+        { name: "닥터코드로스", dosage: "1정", frequency: "하루 3회, 식후", duration: "7일" },
+      ],
+      paymentAmount: "39,000원",
+    },
+    "6": {
+      pharmacy: "365약국",
+      symptoms: "근육통, 어깨 통증",
+      prescriptionNotes: "근육통 완화를 위한 처방입니다. 주기적인 스트레칭과 함께 약물을 복용하세요.",
+      medicines: [
+        { name: "부루펜정", dosage: "400mg", frequency: "하루 3회, 식후", duration: "5일" },
+        { name: "미오스타딘연고", dosage: "적당량", frequency: "하루 2-3회, 해당 부위", duration: "7일" },
+      ],
+      paymentAmount: "26,000원",
+    },
+    "7": {
+      pharmacy: "웰빙약국",
+      symptoms: "설사, 복통",
+      prescriptionNotes: "설사 및 복통 치료를 위한 처방입니다. 충분한 수분 섭취가 필요합니다.",
+      medicines: [
+        { name: "스미엑틴", dosage: "1정", frequency: "하루 3회, 식후", duration: "3일" },
+        { name: "프로바이오틱스", dosage: "1캡슐", frequency: "하루 1회, 식전", duration: "7일" },
+      ],
+      paymentAmount: "22,000원",
+    },
+    "8": {
+      pharmacy: "신세계약국",
+      symptoms: "눈 충혈, 안구 건조",
+      prescriptionNotes: "안구 건조 및 충혈 치료를 위한 처방입니다. 장시간 화면 사용을 줄이세요.",
+      medicines: [
+        { name: "크림아이", dosage: "1알", frequency: "하루 1회, 취침 전", duration: "7일" },
+        { name: "아이윤 안약", dosage: "1-2방울", frequency: "하루 3-4회", duration: "10일" },
+      ],
+      paymentAmount: "31,000원",
+    },
+    "9": {
+      pharmacy: "래미안약국",
+      symptoms: "가슴 쓰림, 역류성 식도염",
+      prescriptionNotes: "역류성 식도염 치료를 위한 처방입니다. 식사 후 2시간은 누우지 마세요.",
+      medicines: [
+        { name: "라니티딘정", dosage: "150mg", frequency: "하루 2회, 식전", duration: "14일" },
+        { name: "가스모틴", dosage: "1정", frequency: "하루 3회, 식후", duration: "7일" },
+      ],
+      paymentAmount: "25,500원",
+    },
+    "10": {
+      pharmacy: "대학약국",
+      symptoms: "피부염, 습진",
+      prescriptionNotes: "피부염 치료를 위한 처방입니다. 자극적인 비누나 화학물질을 피하세요.",
+      medicines: [
+        { name: "비오디움연고", dosage: "적당량", frequency: "하루 2회, 발진 부위", duration: "7일" },
+        { name: "레보켄", dosage: "0.1%", frequency: "하루 1회, 취침 전", duration: "10일" },
+      ],
+      paymentAmount: "28,000원",
+    },
+    "11": {
+      pharmacy: "종합약국",
+      symptoms: "인후염, 편도염",
+      prescriptionNotes: "인후염 치료를 위한 처방입니다. 충분한 수분 섭취와 휴식이 필요합니다.",
+      medicines: [
+        { name: "아목시실린", dosage: "500mg", frequency: "하루 3회, 식후", duration: "7일" },
+        { name: "가글린치", dosage: "적당량", frequency: "하루 3회", duration: "7일" },
+      ],
+      paymentAmount: "33,000원",
+    },
+    "12": {
+      pharmacy: "스마트약국",
+      symptoms: "불면증, 긴장",
+      prescriptionNotes: "불면증 및 긴장 완화를 위한 처방입니다. 규칙적인 수면 패턴을 유지하세요.",
+      medicines: [
+        { name: "조용한밤", dosage: "1정", frequency: "취침 30분 전", duration: "10일" },
+        { name: "마그네슘", dosage: "250mg", frequency: "하루 1회, 취침 전", duration: "14일" },
+      ],
+      paymentAmount: "36,500원",
+    },
+    "13": {
+      pharmacy: "건강플러스약국",
+      symptoms: "관절염, 무릎 통증",
+      prescriptionNotes: "관절염 완화를 위한 처방입니다. 무리한 운동을 피하고 적절한 휴식이 필요합니다.",
+      medicines: [
+        { name: "아세트아미노펜", dosage: "500mg", frequency: "하루 3회, 식후", duration: "10일" },
+        { name: "동화약품 보조개미", dosage: "적당량", frequency: "하루 2회", duration: "14일" },
+      ],
+      paymentAmount: "41,000원",
+    },
+    "14": {
+      pharmacy: "핀케어약국",
+      symptoms: "헤르페스, 구내염",
+      prescriptionNotes: "구내염 및 헤르페스 치료를 위한 처방입니다. 면역력 향상에 도움이 됩니다.",
+      medicines: [
+        { name: "아시클로버크림", dosage: "적당량", frequency: "하루 3회", duration: "7일" },
+        { name: "멀티비타민", dosage: "1정", frequency: "하루 1회, 식후", duration: "30일" },
+      ],
+      paymentAmount: "38,500원",
+    },
+    "15": {
+      pharmacy: "녹십자약국",
+      symptoms: "방광염, 요로감염",
+      prescriptionNotes: "방광염 치료를 위한 처방입니다. 충분한 수분 섭취가 필요합니다.",
+      medicines: [
+        { name: "시프로플록사신", dosage: "250mg", frequency: "하루 2회, 식후", duration: "5일" },
+        { name: "프로폴리스", dosage: "1캡슐", frequency: "하루 2회, 식후", duration: "7일" },
+      ],
+      paymentAmount: "29,000원",
+    },
+    "16": {
+      pharmacy: "약바로약국",
+      symptoms: "코감기, 비염",
+      prescriptionNotes: "코감기 및 비염 치료를 위한 처방입니다. 따뜻한 물을 자주 드세요.",
+      medicines: [
+        { name: "콜미신", dosage: "1정", frequency: "하루 3회, 식후", duration: "5일" },
+        { name: "디엔에이원", dosage: "1정", frequency: "하루 3회, 식후", duration: "7일" },
+      ],
+      paymentAmount: "20,500원",
+    },
+    "17": {
+      pharmacy: "파미스타약국",
+      symptoms: "입맛 상실, 식욕 부진",
+      prescriptionNotes: "식욕 부진 치료를 위한 처방입니다. 규칙적인 식사를 권장합니다.",
+      medicines: [
+        { name: "비오펠텐", dosage: "1정", frequency: "하루 3회, 식후", duration: "7일" },
+        { name: "비타민B복합체", dosage: "1정", frequency: "하루 1회, 식후", duration: "14일" },
+      ],
+      paymentAmount: "27,500원",
+    },
+    "18": {
+      pharmacy: "메디웰약국",
+      symptoms: "어지러움, 이명",
+      prescriptionNotes: "어지러움 및 이명 치료를 위한 처방입니다. 충분한 휴식과 스트레스 관리가 필요합니다.",
+      medicines: [
+        { name: "베타히스틴", dosage: "8mg", frequency: "하루 3회, 식후", duration: "14일" },
+        { name: "진안환", dosage: "1정", frequency: "하루 3회, 식후", duration: "7일" },
+      ],
+      paymentAmount: "44,000원",
+    },
+    "19": {
+      pharmacy: "석세스약국",
+      symptoms: "저혈압, 어지러움",
+      prescriptionNotes: "저혈압 및 어지러움 치료를 위한 처방입니다. 충분한 수분 섭취가 필요합니다.",
+      medicines: [
+        { name: "인삼정", dosage: "1정", frequency: "하루 2회, 식후", duration: "10일" },
+        { name: "비타민C", dosage: "1000mg", frequency: "하루 1회, 식후", duration: "14일" },
+      ],
+      paymentAmount: "23,000원",
+    },
+    "20": {
+      pharmacy: "헬스케어약국",
+      symptoms: "습진, 건선",
+      prescriptionNotes: "습진 및 건선 치료를 위한 처방입니다. 피부를 건조하게 유지하지 마세요.",
+      medicines: [
+        { name: "엘리델크림", dosage: "적당량", frequency: "하루 2회", duration: "14일" },
+        { name: "케토티펜정", dosage: "1mg", frequency: "하루 2회, 식후", duration: "10일" },
+      ],
+      paymentAmount: "47,000원",
+    },
+  };
+
+  const baseData = prescriptionDataMap[record.id] || prescriptionDataMap["1"];
+
+  return {
+    id: record.id,
+    userName: "홍길동",
+    companion: record.companion.split("• ")[1] || "김태원",
+    hospital: record.hospital,
+    pharmacy: baseData.pharmacy || "건강약국",
+    date: record.date,
+    symptoms: baseData.symptoms || "감기",
+    prescriptionNotes: baseData.prescriptionNotes || "처방전입니다.",
+    medicines: baseData.medicines || [],
+    receiptImage: undefined,
+    paymentAmount: baseData.paymentAmount || "35,000원",
+  };
+};
+
 export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
   activeTab,
   onTabPress,
+  onNavigateToPrescription,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -399,36 +648,46 @@ export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
         <ScrollView
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+            />
           }
         >
           <RecordsList>
-            {currentRecords.map((record) => (
-              <RecordCard
+            {currentRecords.map(record => (
+              <TouchableOpacity
                 key={record.id}
-                style={{
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                  elevation: 2,
+                activeOpacity={0.7}
+                onPress={() => {
+                  if (onNavigateToPrescription) {
+                    const prescriptionData = getPrescriptionData(record);
+                    onNavigateToPrescription(prescriptionData);
+                  }
                 }}
               >
-                <RecordInfo>
-                  <CompanionContainer>
-                    <CompanionLabel>동행자</CompanionLabel>
-                    <CompanionName>
-                      {" "}
-                      • {record.companion.split("• ")[1]}
-                    </CompanionName>
-                  </CompanionContainer>
-                  <HospitalText>{record.hospital}</HospitalText>
-                  <DateText>{record.date}</DateText>
-                </RecordInfo>
-                <RecordIcon>
-                  <DocumentIcon />
-                </RecordIcon>
-              </RecordCard>
+                <RecordCard
+                  style={{
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                    elevation: 2,
+                  }}
+                >
+                  <RecordInfo>
+                    <CompanionContainer>
+                      <CompanionLabel>동행자</CompanionLabel>
+                      <CompanionName> • {record.companion.split("• ")[1]}</CompanionName>
+                    </CompanionContainer>
+                    <HospitalText>{record.hospital}</HospitalText>
+                    <DateText>{record.date}</DateText>
+                  </RecordInfo>
+                  <RecordIcon>
+                    <DocumentIcon />
+                  </RecordIcon>
+                </RecordCard>
+              </TouchableOpacity>
             ))}
           </RecordsList>
         </ScrollView>
@@ -436,7 +695,10 @@ export const MedicalRecordsScreen: React.FC<MedicalRecordsScreenProps> = ({
         {renderPagination()}
       </ContentContainer>
 
-      <BottomNavigation activeTab="records" onTabPress={onTabPress} />
+      <BottomNavigation
+        activeTab="records"
+        onTabPress={onTabPress}
+      />
     </Container>
   );
 };
