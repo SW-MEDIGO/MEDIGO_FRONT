@@ -26,7 +26,6 @@ const ContentContainer = styled.View`
 const CategoryContainer = styled.View`
   flex-direction: row;
   margin-bottom: ${theme.spacing.lg}px;
-  gap: ${theme.spacing.sm}px;
   justify-content: center;
   flex-wrap: wrap;
 `;
@@ -43,6 +42,8 @@ const CategoryButton = styled.TouchableOpacity<{ isSelected: boolean }>`
   border: 1px solid
     ${(props: { isSelected: boolean }) =>
       props.isSelected ? "#063E66" : "#E0E0E0"};
+  margin-right: ${theme.spacing.sm}px;
+  margin-bottom: ${theme.spacing.sm}px;
 `;
 
 const CategoryButtonText = styled.Text<{ isSelected: boolean }>`
@@ -52,16 +53,14 @@ const CategoryButtonText = styled.Text<{ isSelected: boolean }>`
     props.isSelected ? theme.colors.white : theme.colors.text.primary};
 `;
 
-const NotificationList = styled.View`
-  gap: ${theme.spacing.md}px;
-`;
+const NotificationList = styled.View``;
 
 const NotificationItem = styled.View`
   background-color: ${theme.colors.white};
   border-radius: ${theme.borderRadius.lg}px;
   padding: ${theme.spacing.md}px;
   flex-direction: row;
-  gap: ${theme.spacing.md}px;
+  margin-bottom: ${theme.spacing.md}px;
 `;
 
 const IconContainer = styled.View`
@@ -69,6 +68,7 @@ const IconContainer = styled.View`
   height: 56px;
   align-items: center;
   justify-content: center;
+  margin-right: ${theme.spacing.md}px;
 `;
 
 const NotificationIcon = styled.Image`
@@ -261,7 +261,7 @@ export const Notification = ({ onTabPress }: NotificationProps) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           <NotificationList>
             {filteredNotifications.map((notification) => (
-              <NotificationItem 
+              <NotificationItem
                 key={notification.id}
                 style={{
                   shadowColor: "#000",

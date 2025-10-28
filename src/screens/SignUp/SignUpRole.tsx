@@ -8,6 +8,7 @@ import { theme } from "../../styles";
 interface SignUpRoleProps {
   userName: string;
   onComplete: (role: "USER" | "MANAGER") => void;
+  onVerifyManager: () => void;
   onBack: () => void;
 }
 
@@ -57,7 +58,6 @@ const TitleWrapper = styled.View`
 
 const RoleOptionsContainer = styled.View`
   flex-direction: row;
-  gap: ${theme.spacing.md}px;
 `;
 
 interface RoleCardProps {
@@ -73,9 +73,11 @@ const RoleCard = styled(TouchableOpacity)<RoleCardProps>`
   padding-left: ${theme.spacing.lg}px;
   padding-right: ${theme.spacing.lg}px;
   border-width: 2px;
-  border-color: ${({ selected }: RoleCardProps) => (selected ? "#0BC1BF" : theme.colors.border)};
+  border-color: ${({ selected }: RoleCardProps) =>
+    selected ? "#0BC1BF" : theme.colors.border};
   align-items: center;
   justify-content: space-between;
+  margin-right: ${theme.spacing.md}px;
 `;
 
 const RoleImage = styled(Image)`
@@ -99,7 +101,12 @@ const ButtonWrapper = styled.View`
   background-color: ${theme.colors.background};
 `;
 
-export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) => {
+export const SignUpRole = ({
+  userName,
+  onComplete,
+  onVerifyManager,
+  onBack,
+}: SignUpRoleProps) => {
   const [selectedRole, setSelectedRole] = useState<RoleType>(null);
 
   const handleRoleSelect = (role: RoleType) => {
@@ -107,8 +114,10 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
   };
 
   const handleComplete = () => {
-    if (selectedRole) {
+    if (selectedRole === "USER") {
       onComplete(selectedRole);
+    } else if (selectedRole === "MANAGER") {
+      onVerifyManager();
     }
   };
 
@@ -119,35 +128,20 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
           <BackIcon />
         </BackButton>
         <ProgressBarWrapper>
-          <ProgressBar
-            currentStep={4}
-            totalSteps={4}
-          />
+          <ProgressBar currentStep={4} totalSteps={4} />
         </ProgressBarWrapper>
         <PlaceholderView />
       </HeaderWrapper>
 
       <ContentContainer>
         <TitleWrapper>
-          <Text
-            size="xxl"
-            weight="bold"
-            color={theme.colors.text.primary}
-          >
-            <Text
-              size="xxl"
-              weight="bold"
-              color="#0BC1BF"
-            >
+          <Text size="xxl" weight="bold" color={theme.colors.text.primary}>
+            <Text size="xxl" weight="bold" color="#0BC1BF">
               {userName}
             </Text>
             님 반가워요!
           </Text>
-          <Text
-            size="xl"
-            weight="medium"
-            color={theme.colors.text.primary}
-          >
+          <Text size="xl" weight="medium" color={theme.colors.text.primary}>
             당신의 역할을 선택해주세요.
           </Text>
         </TitleWrapper>
@@ -167,11 +161,7 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
           >
             <TextContainer>
               <RoleTitle>
-                <Text
-                  size="xl"
-                  weight="bold"
-                  color={theme.colors.text.primary}
-                >
+                <Text size="xl" weight="bold" color={theme.colors.text.primary}>
                   사용자
                 </Text>
               </RoleTitle>
@@ -199,15 +189,12 @@ export const SignUpRole = ({ userName, onComplete, onBack }: SignUpRoleProps) =>
               shadowOpacity: 0.08,
               shadowRadius: 2,
               elevation: 1,
+              marginRight: 0,
             }}
           >
             <TextContainer>
               <RoleTitle>
-                <Text
-                  size="xl"
-                  weight="bold"
-                  color={theme.colors.text.primary}
-                >
+                <Text size="xl" weight="bold" color={theme.colors.text.primary}>
                   동행자
                 </Text>
               </RoleTitle>
