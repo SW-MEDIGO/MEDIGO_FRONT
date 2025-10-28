@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components/native";
-import { SafeAreaView, View } from "react-native";
-import { Container, Text } from "../components";
+import { View } from "react-native";
+import { Container, Text, Header } from "../components";
+import { BottomNavigation } from "../components/BottomNavigation";
 import { theme } from "../styles";
 
-const ScreenContainer = styled(SafeAreaView)`
+const ScreenContainer = styled.View`
   flex: 1;
   background-color: ${theme.colors.background};
 `;
@@ -14,7 +15,7 @@ const Scroll = styled.ScrollView`
 `;
 
 const Card = styled.View`
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.white};
   border-radius: ${theme.borderRadius.lg}px;
   padding: ${theme.spacing.lg}px;
   margin: ${theme.spacing.md}px;
@@ -45,7 +46,7 @@ const IconCircle = styled.View`
 `;
 
 const Menu = styled.View`
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.white};
   border-radius: ${theme.borderRadius.lg}px;
   margin: 0 ${theme.spacing.md}px ${theme.spacing.md}px;
   overflow: hidden;
@@ -53,7 +54,7 @@ const Menu = styled.View`
 
 const Divider = styled.View`
   height: 1px;
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.border};
   margin-left: ${theme.spacing.lg}px;
 `;
 
@@ -111,6 +112,8 @@ interface MyPageScreenProps {
 export const MyPageScreen = ({ activeTab, onTabPress }: MyPageScreenProps) => {
   return (
     <ScreenContainer>
+      <Header></Header>
+
       <Scroll>
         <Card
           style={{
@@ -163,6 +166,11 @@ export const MyPageScreen = ({ activeTab, onTabPress }: MyPageScreenProps) => {
           <MenuItem title="자주하는 질문" />
         </Menu>
       </Scroll>
+
+      <BottomNavigation
+        activeTab="profile"
+        onTabPress={onTabPress || (() => {})}
+      />
     </ScreenContainer>
   );
 };

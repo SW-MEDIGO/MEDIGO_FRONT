@@ -20,18 +20,18 @@ const StyledText = styled.Text<{
   font-family: ${theme.fonts.primary};
   font-size: ${({ size = "md" }) => theme.fontSize[size as keyof typeof theme.fontSize]}px;
   font-weight: ${({ weight = "normal" }) => theme.fontWeight[weight as keyof typeof theme.fontWeight]};
-  color: ${({ color = theme.colors.text }) => color};
+  color: ${({ color = theme.colors.text.primary }) => color};
   text-align: ${({ align = "left" }) => align};
 `;
 
-export const Text: React.FC<TextProps> = ({
+export const Text = ({
   children,
   size = "md",
   weight = "normal",
-  color = theme.colors.text,
+  color = theme.colors.text.primary,
   align = "left",
   numberOfLines,
-}) => {
+}: TextProps) => {
   return (
     <StyledText
       size={size}

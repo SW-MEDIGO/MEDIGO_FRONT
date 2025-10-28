@@ -121,6 +121,15 @@ export const SignUpRole = ({
     }
   };
 
+  const getButtonTitle = () => {
+    if (selectedRole === "USER") {
+      return "시작하기";
+    } else if (selectedRole === "MANAGER") {
+      return "인증하기";
+    }
+    return "시작하기";
+  };
+
   return (
     <ScreenContainer>
       <HeaderWrapper>
@@ -216,7 +225,7 @@ export const SignUpRole = ({
 
       <ButtonWrapper>
         <Button
-          title="시작하기"
+          title={getButtonTitle()}
           onPress={handleComplete}
           disabled={selectedRole === null}
         />
