@@ -17,6 +17,7 @@ import {
   VerifyContainer,
   CompanionMatching,
   CompanionMatchingDone,
+  PrescriptionScreen,
 } from "./src/screens";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
@@ -32,6 +33,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [currentScreen, setCurrentScreen] = useState("home");
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [prescriptionData, setPrescriptionData] = useState<any>(null);
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -113,6 +115,17 @@ export default function App() {
       );
     }
 
+    if (currentScreen === "prescription") {
+      return (
+        <PrescriptionScreen
+          record={prescriptionData}
+          navigation={{
+            goBack: () => setCurrentScreen("home"),
+          }}
+        />
+      );
+    }
+
     // 탭 기반 화면
     switch (activeTab) {
       case "home":
@@ -130,6 +143,10 @@ export default function App() {
           <MedicalRecordsScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
+            onNavigateToPrescription={data => {
+              setPrescriptionData(data);
+              setCurrentScreen("prescription");
+            }}
           />
         );
       case "profile":
@@ -259,7 +276,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
-        {currentScreen === "companion-matching" || currentScreen === "companion-matching-done" ? null : (
+        {currentScreen === "companion-matching" ||
+        currentScreen === "companion-matching-done" ||
+        currentScreen === "prescription" ? null : (
           <Header activeTab={activeTab} />
         )}
         {renderScreen()}
