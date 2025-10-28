@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { View } from "react-native";
-import { Container, Text, Header } from "../components";
+import { Container, Text } from "../components";
 import { BottomNavigation } from "../components/BottomNavigation";
 import { theme } from "../styles";
 
@@ -112,8 +112,6 @@ interface MyPageScreenProps {
 export const MyPageScreen = ({ activeTab, onTabPress }: MyPageScreenProps) => {
   return (
     <ScreenContainer>
-      <Header></Header>
-
       <Scroll>
         <Card
           style={{
