@@ -15,6 +15,8 @@ import {
   OnboardingContainer,
   Notification,
   VerifyContainer,
+  CompanionMatching,
+  CompanionMatchingDone,
 } from "./src/screens";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
@@ -28,6 +30,7 @@ export default function App() {
   const [isVerifyingManager, setIsVerifyingManager] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
+  const [currentScreen, setCurrentScreen] = useState("home");
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -83,12 +86,41 @@ export default function App() {
   };
 
   const renderScreen = () => {
+    // 현재 화면이 서브 화면인 경우
+    if (currentScreen === "companion-matching") {
+      return (
+        <CompanionMatching
+          navigation={{
+            goBack: () => setCurrentScreen("home"),
+            navigate: (screen: string) => {
+              if (screen === "CompanionMatchingDone") {
+                setCurrentScreen("companion-matching-done");
+              }
+            },
+          }}
+        />
+      );
+    }
+
+    if (currentScreen === "companion-matching-done") {
+      return (
+        <CompanionMatchingDone
+          navigation={{
+            goBack: () => setCurrentScreen("companion-matching"),
+            navigateToHome: () => setCurrentScreen("home"),
+          }}
+        />
+      );
+    }
+
+    // 탭 기반 화면
     switch (activeTab) {
       case "home":
         return (
           <HomeScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
+            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
           />
         );
       case "usage":
@@ -107,6 +139,7 @@ export default function App() {
           <HomeScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
+            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
           />
         );
     }
@@ -226,7 +259,9 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <View style={{ flex: 1 }}>
-        <Header activeTab={activeTab} />
+        {currentScreen === "companion-matching" || currentScreen === "companion-matching-done" ? null : (
+          <Header activeTab={activeTab} />
+        )}
         {renderScreen()}
         <StatusBar style="auto" />
       </View>

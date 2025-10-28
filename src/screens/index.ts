@@ -9,3 +9,5 @@ export { SignUpPolicy } from "./SignUp/SignUpPolicy";
 export { SignUpRole } from "./SignUp/SignUpRole";
 export { OnboardingContainer } from "./Onboarding/OnboardingContainer";
 export { VerifyContainer } from "./Verify/VerifyContainer";
+export { CompanionMatching } from "./CompanionMatching";
+export { CompanionMatchingDone } from "./CompanionMatchingDone";

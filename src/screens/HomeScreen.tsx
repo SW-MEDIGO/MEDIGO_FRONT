@@ -160,48 +160,54 @@ const HospitalDescription = styled.Text`
 interface HomeScreenProps {
   activeTab: string;
   onTabPress: (tab: string) => void;
+  onNavigateToCompanionMatching?: () => void;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ activeTab, onTabPress }) => {
+export const HomeScreen = ({ activeTab, onTabPress, onNavigateToCompanionMatching }: HomeScreenProps) => {
   return (
     <ScreenContainer>
       {/* Main Content */}
       <ScrollContainer showsVerticalScrollIndicator={false}>
         {/* 동행자 매칭 배너 */}
-        <LinearGradient
-          colors={["#466BEE", "#00A6D8"]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          style={{
-            borderRadius: 15,
-            padding: 15,
-            paddingLeft: 20,
-            marginTop: 40,
-            marginBottom: 25,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.15,
-            shadowRadius: 2,
-            elevation: 2,
-          }}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={onNavigateToCompanionMatching}
         >
-          <BannerContent>
-            <BannerTitle>동행자 매칭</BannerTitle>
-            <BannerDescription>메디고와 함께 검증된 동행자를 찾아보세요</BannerDescription>
-          </BannerContent>
-          <Image
-            source={require("../../assets/main/connect.png")}
+          <LinearGradient
+            colors={["#466BEE", "#00A6D8"]}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
             style={{
-              width: 60,
-              height: 60,
-              marginLeft: 10,
+              borderRadius: 15,
+              padding: 15,
+              paddingLeft: 20,
+              marginTop: 40,
+              marginBottom: 25,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0.15,
+              shadowRadius: 2,
+              elevation: 2,
             }}
-            resizeMode="contain"
-          />
-        </LinearGradient>
+          >
+            <BannerContent>
+              <BannerTitle>동행자 매칭</BannerTitle>
+              <BannerDescription>메디고와 함께 검증된 동행자를 찾아보세요</BannerDescription>
+            </BannerContent>
+            <Image
+              source={require("../../assets/main/connect.png")}
+              style={{
+                width: 60,
+                height: 60,
+                marginLeft: 10,
+              }}
+              resizeMode="contain"
+            />
+          </LinearGradient>
+        </TouchableOpacity>
 
         {/* 바로 동행 섹션 */}
         <SectionHeader>
