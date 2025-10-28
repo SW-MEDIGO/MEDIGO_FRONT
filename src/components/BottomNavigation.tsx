@@ -12,7 +12,7 @@ const NavigationContainer = styled.View`
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #ffffff;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   padding-top: 8px;
@@ -38,8 +38,7 @@ const TabIcon = styled.View`
 const TabText = styled.Text<{ isActive: boolean }>`
   font-size: 12px;
   font-weight: 500;
-  color: ${(props: { isActive: boolean }) =>
-    props.isActive ? "#000000" : "#9CA3AF"};
+  color: ${(props: { isActive: boolean }) => (props.isActive ? "#4a4a4a " : "#9CA3AF")};
   text-align: center;
 `;
 
@@ -50,10 +49,7 @@ const tabs = [
   { id: "profile", label: "내 정보", icon: ProfileIcon },
 ];
 
-export const BottomNavigation: React.FC<BottomNavigationProps> = ({
-  activeTab,
-  onTabPress,
-}) => {
+export const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabPress }) => {
   return (
     <NavigationContainer
       style={{
@@ -64,7 +60,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         elevation: 4,
       }}
     >
-      {tabs.map((tab) => {
+      {tabs.map(tab => {
         const IconComponent = tab.icon;
         const isActive = activeTab === tab.id;
 
@@ -76,8 +72,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
           >
             <TabIcon>
               <IconComponent
-                size={24}
-                color={isActive ? "#000000" : "#9CA3AF"}
+                size={32}
+                color={isActive ? "#4a4a4a" : "#9CA3AF"}
               />
             </TabIcon>
             <TabText isActive={isActive}>{tab.label}</TabText>
