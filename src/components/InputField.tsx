@@ -55,7 +55,7 @@ const StyledTextInput = styled.TextInput`
 const HelperText = styled.Text`
   font-family: ${theme.fonts.primary};
   margin-top: 6px;
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.text.secondary};
   font-size: ${theme.fontSize.xs}px;
 `;
 

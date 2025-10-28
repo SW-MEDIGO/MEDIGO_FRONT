@@ -1,25 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components/native";
-import { SafeAreaView, TouchableOpacity } from "react-native";
+import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import Svg, { Path } from "react-native-svg";
-import { Text, Button, ProgressBar } from "../../components";
+import { Text, Button } from "../../components";
 import { BackIcon } from "../../components/icons";
 import { theme } from "../../styles";
 
-interface SignUpPolicyProps {
-  initialData: {
-    termsOfService: boolean;
-    privacyPolicy: boolean;
-    locationService: boolean;
-    ageLimit: boolean;
-    marketingConsent: boolean;
-  };
+interface VerifyPolicyProps {
   onComplete: (data: {
-    termsOfService: boolean;
-    privacyPolicy: boolean;
-    locationService: boolean;
-    ageLimit: boolean;
-    marketingConsent: boolean;
+    privacyProtection: boolean;
+    confidentiality: boolean;
+    dataSecurity: boolean;
+    serviceTerms: boolean;
   }) => void;
   onBack: () => void;
 }
@@ -63,15 +55,6 @@ const BackButton = styled(TouchableOpacity)`
   padding-bottom: ${theme.spacing.sm}px;
   padding-left: ${theme.spacing.sm}px;
   padding-right: ${theme.spacing.sm}px;
-`;
-
-const ProgressBarWrapper = styled.View`
-  flex: 1;
-  align-items: center;
-`;
-
-const PlaceholderView = styled.View`
-  width: 30px;
 `;
 
 const ContentContainer = styled.View`
@@ -130,27 +113,25 @@ const ButtonWrapper = styled.View`
   background-color: ${theme.colors.background};
 `;
 
-export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyProps) => {
-  const [termsOfService, setTermsOfService] = useState(initialData.termsOfService);
-  const [privacyPolicy, setPrivacyPolicy] = useState(initialData.privacyPolicy);
-  const [locationService, setLocationService] = useState(initialData.locationService);
-  const [ageLimit, setAgeLimit] = useState(initialData.ageLimit);
-  const [marketingConsent, setMarketingConsent] = useState(initialData.marketingConsent);
+export const VerifyPolicy = ({ onComplete, onBack }: VerifyPolicyProps) => {
+  const [privacyProtection, setPrivacyProtection] = useState(false);
+  const [confidentiality, setConfidentiality] = useState(false);
+  const [dataSecurity, setDataSecurity] = useState(false);
+  const [serviceTerms, setServiceTerms] = useState(false);
 
   // 모두 동의 상태 계산
-  const allAgreed = termsOfService && privacyPolicy && locationService && ageLimit && marketingConsent;
+  const allAgreed = privacyProtection && confidentiality && dataSecurity && serviceTerms;
 
   // 필수 항목 모두 체크되었는지 확인
-  const requiredAgreed = termsOfService && privacyPolicy && locationService && ageLimit;
+  const requiredAgreed = privacyProtection && confidentiality && dataSecurity && serviceTerms;
 
   // 모두 동의 토글
   const toggleAllAgreed = () => {
     const newValue = !allAgreed;
-    setTermsOfService(newValue);
-    setPrivacyPolicy(newValue);
-    setLocationService(newValue);
-    setAgeLimit(newValue);
-    setMarketingConsent(newValue);
+    setPrivacyProtection(newValue);
+    setConfidentiality(newValue);
+    setDataSecurity(newValue);
+    setServiceTerms(newValue);
   };
 
   return (
@@ -159,13 +140,14 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
         <BackButton onPress={onBack}>
           <BackIcon />
         </BackButton>
-        <ProgressBarWrapper>
-          <ProgressBar
-            currentStep={3}
-            totalSteps={4}
-          />
-        </ProgressBarWrapper>
-        <PlaceholderView />
+        <Text
+          size="lg"
+          weight="semibold"
+          color={theme.colors.text.primary}
+        >
+          약관 동의
+        </Text>
+        <View style={{ width: 40 }} />
       </HeaderWrapper>
 
       <ContentContainer>
@@ -175,14 +157,14 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
             weight="bold"
             color={theme.colors.text.primary}
           >
-            원활한 서비스 이용을 위해
+            동행자로서
           </Text>
           <Text
             size="xxl"
             weight="bold"
             color={theme.colors.text.primary}
           >
-            필수 약관 동의가 필요해요
+            약관에 동의해주세요
           </Text>
         </TitleWrapper>
 
@@ -209,9 +191,9 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
             </CheckboxLabel>
           </CheckboxItem>
 
-          <CheckboxItem onPress={() => setTermsOfService(!termsOfService)}>
-            <CheckboxIconWrapper checked={termsOfService}>
-              <CheckIcon checked={termsOfService} />
+          <CheckboxItem onPress={() => setPrivacyProtection(!privacyProtection)}>
+            <CheckboxIconWrapper checked={privacyProtection}>
+              <CheckIcon checked={privacyProtection} />
             </CheckboxIconWrapper>
             <CheckboxLabel>
               <Text
@@ -219,14 +201,14 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
                 weight="normal"
                 color={theme.colors.text.primary}
               >
-                (필수) 서비스 이용약관에 동의합니다.
+                (필수) 개인정보 보호 및 처리방침에 동의합니다.
               </Text>
             </CheckboxLabel>
           </CheckboxItem>
 
-          <CheckboxItem onPress={() => setPrivacyPolicy(!privacyPolicy)}>
-            <CheckboxIconWrapper checked={privacyPolicy}>
-              <CheckIcon checked={privacyPolicy} />
+          <CheckboxItem onPress={() => setConfidentiality(!confidentiality)}>
+            <CheckboxIconWrapper checked={confidentiality}>
+              <CheckIcon checked={confidentiality} />
             </CheckboxIconWrapper>
             <CheckboxLabel>
               <Text
@@ -234,14 +216,14 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
                 weight="normal"
                 color={theme.colors.text.primary}
               >
-                (필수) 개인정보 처리방침에 동의합니다.
+                (필수) 사용자 정보 기밀유지 및 비밀보장에 동의합니다.
               </Text>
             </CheckboxLabel>
           </CheckboxItem>
 
-          <CheckboxItem onPress={() => setLocationService(!locationService)}>
-            <CheckboxIconWrapper checked={locationService}>
-              <CheckIcon checked={locationService} />
+          <CheckboxItem onPress={() => setDataSecurity(!dataSecurity)}>
+            <CheckboxIconWrapper checked={dataSecurity}>
+              <CheckIcon checked={dataSecurity} />
             </CheckboxIconWrapper>
             <CheckboxLabel>
               <Text
@@ -249,14 +231,14 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
                 weight="normal"
                 color={theme.colors.text.primary}
               >
-                (필수) 위치기반 서비스 이용약관에 동의합니다.
+                (필수) 개인정보 무단 유출 금지 및 데이터 보안에 동의합니다.
               </Text>
             </CheckboxLabel>
           </CheckboxItem>
 
-          <CheckboxItem onPress={() => setAgeLimit(!ageLimit)}>
-            <CheckboxIconWrapper checked={ageLimit}>
-              <CheckIcon checked={ageLimit} />
+          <CheckboxItem onPress={() => setServiceTerms(!serviceTerms)}>
+            <CheckboxIconWrapper checked={serviceTerms}>
+              <CheckIcon checked={serviceTerms} />
             </CheckboxIconWrapper>
             <CheckboxLabel>
               <Text
@@ -264,22 +246,7 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
                 weight="normal"
                 color={theme.colors.text.primary}
               >
-                (필수) 만 14세 이상입니다.
-              </Text>
-            </CheckboxLabel>
-          </CheckboxItem>
-
-          <CheckboxItem onPress={() => setMarketingConsent(!marketingConsent)}>
-            <CheckboxIconWrapper checked={marketingConsent}>
-              <CheckIcon checked={marketingConsent} />
-            </CheckboxIconWrapper>
-            <CheckboxLabel>
-              <Text
-                size="md"
-                weight="normal"
-                color={theme.colors.text.primary}
-              >
-                (선택) 마케팅 정보 수신에 동의합니다.
+                (필수) 동행자 서비스 이용약관에 동의합니다.
               </Text>
             </CheckboxLabel>
           </CheckboxItem>
@@ -288,14 +255,13 @@ export const SignUpPolicy = ({ initialData, onComplete, onBack }: SignUpPolicyPr
 
       <ButtonWrapper>
         <Button
-          title="다음"
+          title="동행자 등록 완료"
           onPress={() =>
             onComplete({
-              termsOfService,
-              privacyPolicy,
-              locationService,
-              ageLimit,
-              marketingConsent,
+              privacyProtection,
+              confidentiality,
+              dataSecurity,
+              serviceTerms,
             })
           }
           disabled={!requiredAgreed}

@@ -72,7 +72,7 @@ const RightArrow = () => (
       borderRightWidth: 2,
       borderTopWidth: 2,
       transform: [{ rotate: "45deg" }],
-      borderColor: theme.colors.textSecondary,
+      borderColor: theme.colors.text.secondary,
     }}
   />
 );
@@ -90,7 +90,10 @@ const QuickAction = ({ label }: { label: string }) => (
   <View style={{ alignItems: "center", flex: 1 }}>
     <IconCircle />
     <View style={{ height: theme.spacing.sm }} />
-    <Text size="sm" color={theme.colors.textSecondary}>
+    <Text
+      size="sm"
+      color={theme.colors.text.secondary}
+    >
       {label}
     </Text>
   </View>
@@ -130,7 +133,10 @@ export const MyPageScreen: React.FC<MyPageScreenProps> = ({ activeTab }) => {
               <Text size="lg" weight="bold">
                 장은성
               </Text>
-              <Text size="sm" color={theme.colors.textSecondary}>
+              <Text
+                size="sm"
+                color={theme.colors.text.secondary}
+              >
                 마이페이지
               </Text>
             </View>

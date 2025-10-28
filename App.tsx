@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { ThemeProvider } from "styled-components/native";
 import * as Font from "expo-font";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   MyPageScreen,
   HomeScreen,
@@ -11,14 +12,20 @@ import {
   SignUpUserInfo,
   SignUpPolicy,
   SignUpRole,
+  OnboardingContainer,
+  Notification,
+  VerifyContainer,
 } from "./src/screens";
 import { BottomNavigation, Header } from "./src/components";
 import { theme } from "./src/styles";
 import { View } from "react-native";
 
 export default function App() {
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const [isVerifyingManager, setIsVerifyingManager] = useState(false);
   const [signUpStep, setSignUpStep] = useState(1);
   const [activeTab, setActiveTab] = useState("home");
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -35,15 +42,12 @@ export default function App() {
 
   // 회원가입 정보 state
   const [signUpData, setSignUpData] = useState({
-    // Step 1: 계정 정보
     userId: "",
     email: "",
     password: "",
     passwordConfirm: "",
-    // Step 2: 개인 정보
     name: "",
     phoneNumber: "",
-    // Step 3: 약관 동의
     termsOfService: false,
     privacyPolicy: false,
     locationService: false,
@@ -51,12 +55,44 @@ export default function App() {
     marketingConsent: false,
   });
 
+  // 앱 시작 시 온보딩 완료 상태 확인
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const onboardingCompleted = await AsyncStorage.getItem("onboardingCompleted");
+        setHasCompletedOnboarding(onboardingCompleted === "true");
+      } catch (error) {
+        console.log("온보딩 상태 확인 중 오류:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  // 온보딩 완료 처리
+  const handleOnboardingComplete = async () => {
+    try {
+      await AsyncStorage.setItem("onboardingCompleted", "true");
+      setHasCompletedOnboarding(true);
+    } catch (error) {
+      console.log("온보딩 완료 상태 저장 중 오류:", error);
+      setHasCompletedOnboarding(true);
+    }
+  };
+
   const renderScreen = () => {
     switch (activeTab) {
       case "home":
-        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
+        return (
+          <HomeScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
+        );
       case "usage":
-        return <MyPageScreen activeTab={activeTab} />;
+        return <Notification onTabPress={setActiveTab} />;
       case "records":
         return (
           <MedicalRecordsScreen
@@ -65,9 +101,14 @@ export default function App() {
           />
         );
       case "profile":
-        return <MyPageScreen activeTab={activeTab} />;
+        return <MyPageScreen onTabPress={setActiveTab} />;
       default:
-        return <HomeScreen activeTab={activeTab} onTabPress={setActiveTab} />;
+        return (
+          <HomeScreen
+            activeTab={activeTab}
+            onTabPress={setActiveTab}
+          />
+        );
     }
   };
 
@@ -77,6 +118,14 @@ export default function App() {
   }
 
   // 로그인되지 않았으면 로그인 화면 표시
+  if (!hasCompletedOnboarding) {
+    return (
+      <ThemeProvider theme={theme}>
+        <OnboardingContainer onComplete={handleOnboardingComplete} />
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    );
+  }
   if (!isLoggedIn) {
     return (
       <ThemeProvider theme={theme}>
@@ -85,11 +134,9 @@ export default function App() {
             onLoginSuccess={() => setIsLoggedIn(true)}
             onSignUpPress={() => setIsSigningUp(true)}
             onFindIdPress={() => {
-              // TODO: 아이디 찾기 기능 구현
               console.log("아이디 찾기");
             }}
             onFindPasswordPress={() => {
-              // TODO: 비밀번호 찾기 기능 구현
               console.log("비밀번호 찾기");
             }}
           />
@@ -103,8 +150,8 @@ export default function App() {
                   password: signUpData.password,
                   passwordConfirm: signUpData.passwordConfirm,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(2);
                 }}
                 onBack={() => setIsSigningUp(false)}
@@ -116,8 +163,8 @@ export default function App() {
                   name: signUpData.name,
                   phoneNumber: signUpData.phoneNumber,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(3);
                 }}
                 onBack={() => setSignUpStep(1)}
@@ -132,22 +179,40 @@ export default function App() {
                   ageLimit: signUpData.ageLimit,
                   marketingConsent: signUpData.marketingConsent,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(4);
                 }}
                 onBack={() => setSignUpStep(2)}
               />
             )}
-            {signUpStep === 4 && (
+            {signUpStep === 4 && !isVerifyingManager && (
               <SignUpRole
                 userName={signUpData.name}
+                onComplete={role => {
+                  if (role === "USER") {
+                    setIsSigningUp(false);
+                    setIsLoggedIn(true);
+                    setSignUpStep(1); // 다음 회원가입을 위해 초기화
+                  }
+                }}
+                onVerifyManager={() => {
+                  setIsVerifyingManager(true);
+                }}
+                onBack={() => setSignUpStep(3)}
+              />
+            )}
+            {isVerifyingManager && (
+              <VerifyContainer
                 onComplete={() => {
+                  setIsVerifyingManager(false);
                   setIsSigningUp(false);
                   setIsLoggedIn(true);
                   setSignUpStep(1); // 다음 회원가입을 위해 초기화
                 }}
-                onBack={() => setSignUpStep(3)}
+                onBack={() => {
+                  setIsVerifyingManager(false);
+                }}
               />
             )}
           </>
@@ -163,9 +228,6 @@ export default function App() {
       <View style={{ flex: 1 }}>
         <Header activeTab={activeTab} />
         {renderScreen()}
-        {activeTab !== "home" && (
-          <BottomNavigation activeTab={activeTab} onTabPress={setActiveTab} />
-        )}
         <StatusBar style="auto" />
       </View>
     </ThemeProvider>
