@@ -2,13 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components/native";
 import { ScrollView, TouchableOpacity } from "react-native";
 import { theme } from "../styles";
-import {
-  BackIcon,
-  SearchIcon,
-  HomeAddressIcon,
-  OfficeIcon,
-  LocationPinIcon,
-} from "../components/icons";
+import { BackIcon, SearchIcon, HomeAddressIcon, OfficeIcon, LocationPinIcon } from "../components/icons";
 
 interface AddressSettingScreenProps {
   onBackPress?: () => void;
@@ -211,10 +205,8 @@ export const AddressSettingScreen = ({
 
   const handleAddressSelect = useCallback(
     (selectedAddress: AddressInfo) => {
-      console.log("주소 선택됨:", selectedAddress.name);
-
-      setAddresses((prevAddresses) =>
-        prevAddresses.map((address) => ({
+      setAddresses(prevAddresses =>
+        prevAddresses.map(address => ({
           ...address,
           isSelected: address.id === selectedAddress.id,
         }))
@@ -225,8 +217,6 @@ export const AddressSettingScreen = ({
   );
 
   const handleCurrentLocationPress = () => {
-    // 지도 화면으로 이동
-    console.log("지도 화면으로 이동");
     onLocationMapPress?.();
   };
 
@@ -235,28 +225,46 @@ export const AddressSettingScreen = ({
   };
 
   const handleAddressEditInternal = (addressId: string) => {
-    const addressToEdit = addresses.find((address) => address.id === addressId);
+    const addressToEdit = addresses.find(address => address.id === addressId);
     if (addressToEdit) {
-      console.log("주소 수정:", addressToEdit);
       onAddressEdit?.(addressToEdit);
     }
   };
 
   const handleAddressDeleteInternal = (addressId: string) => {
-    console.log("주소 삭제:", addressId);
     onAddressDelete?.(addressId);
   };
 
   const renderAddressIcon = (type: AddressInfo["type"]) => {
     switch (type) {
       case "home":
-        return <HomeAddressIcon width={20} height={20} />;
+        return (
+          <HomeAddressIcon
+            width={20}
+            height={20}
+          />
+        );
       case "office":
-        return <OfficeIcon width={20} height={20} />;
+        return (
+          <OfficeIcon
+            width={20}
+            height={20}
+          />
+        );
       case "school":
-        return <LocationPinIcon width={20} height={20} />;
+        return (
+          <LocationPinIcon
+            width={20}
+            height={20}
+          />
+        );
       default:
-        return <LocationPinIcon width={20} height={20} />;
+        return (
+          <LocationPinIcon
+            width={20}
+            height={20}
+          />
+        );
     }
   };
 
@@ -264,13 +272,22 @@ export const AddressSettingScreen = ({
     <ScreenContainer>
       {/* Header */}
       <HeaderContainer>
-        <BackButton onPress={onBackPress} activeOpacity={0.7}>
-          <BackIcon width={24} height={24} />
+        <BackButton
+          onPress={onBackPress}
+          activeOpacity={0.7}
+        >
+          <BackIcon
+            width={24}
+            height={24}
+          />
         </BackButton>
 
         <HeaderTitle>{isEditMode ? "주소 편집" : "주소 설정"}</HeaderTitle>
 
-        <HeaderEditButton onPress={handleEditModeToggle} activeOpacity={0.7}>
+        <HeaderEditButton
+          onPress={handleEditModeToggle}
+          activeOpacity={0.7}
+        >
           <EditText>{isEditMode ? "완료" : "편집"}</EditText>
         </HeaderEditButton>
       </HeaderContainer>
@@ -279,7 +296,10 @@ export const AddressSettingScreen = ({
         {/* Search Bar */}
         <SearchContainer>
           <SearchIconContainer>
-            <SearchIcon width={18} height={18} />
+            <SearchIcon
+              width={18}
+              height={18}
+            />
           </SearchIconContainer>
           <SearchInput
             placeholder="지번, 도로명, 건물명으로 검색"
@@ -303,24 +323,16 @@ export const AddressSettingScreen = ({
             {addresses.map((address, index) => (
               <AddressItem
                 key={address.id}
-                onPress={
-                  isEditMode ? undefined : () => handleAddressSelect(address)
-                }
+                onPress={isEditMode ? undefined : () => handleAddressSelect(address)}
                 activeOpacity={isEditMode ? 1 : 0.7}
               >
                 <AddressContent>
                   <AddressHeader>
-                    <AddressTypeIcon>
-                      {renderAddressIcon(address.type)}
-                    </AddressTypeIcon>
+                    <AddressTypeIcon>{renderAddressIcon(address.type)}</AddressTypeIcon>
                     <AddressTypeName>{address.name}</AddressTypeName>
                   </AddressHeader>
                   <AddressText>{address.address}</AddressText>
-                  {address.isSelected && (
-                    <CurrentAddressIndicator>
-                      현재 설정된 주소
-                    </CurrentAddressIndicator>
-                  )}
+                  {address.isSelected && <CurrentAddressIndicator>현재 설정된 주소</CurrentAddressIndicator>}
                 </AddressContent>
 
                 {isEditMode && (

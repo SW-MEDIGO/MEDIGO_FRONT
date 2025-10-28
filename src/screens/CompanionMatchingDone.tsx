@@ -8,6 +8,13 @@ import { CheckIcon } from "../components/icons/CheckIcon";
 
 interface CompanionMatchingDoneProps {
   navigation?: any;
+  data?: {
+    hospitalName?: string;
+    hospitalAddress?: string;
+    selectedDate?: Date;
+    requestContent?: string;
+    companionGender?: "MALE" | "FEMALE" | "ANY";
+  };
 }
 
 const ScreenContainer = styled(SafeAreaView)`
@@ -122,7 +129,22 @@ const HomeButtonText = styled.Text`
   color: ${theme.colors.white};
 `;
 
-export const CompanionMatchingDone = ({ navigation }: CompanionMatchingDoneProps) => {
+export const CompanionMatchingDone = ({ navigation, data }: CompanionMatchingDoneProps) => {
+  // 날짜 포맷팅 함수
+  const formatDateTime = (date?: Date) => {
+    if (!date) return "-";
+    const dateStr = date.toLocaleDateString("ko-KR");
+    const timeStr = date.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+    return `${dateStr} ${timeStr}`;
+  };
+
+  // 성별 조건 텍스트 변환
+  const getGenderText = (gender?: string) => {
+    if (gender === "MALE") return "남성";
+    if (gender === "FEMALE") return "여성";
+    return "무관";
+  };
+
   return (
     <ScreenContainer>
       <HeaderWrapper>
@@ -176,24 +198,24 @@ export const CompanionMatchingDone = ({ navigation }: CompanionMatchingDoneProps
 
           <InfoRow>
             <InfoLabel>병원명</InfoLabel>
-            <InfoValue>서울대학교병원</InfoValue>
+            <InfoValue>{data?.hospitalName || "-"}</InfoValue>
           </InfoRow>
 
           <InfoRow>
             <InfoLabel>예약 일시</InfoLabel>
-            <InfoValue>2024년 12월 25일 14:30</InfoValue>
+            <InfoValue>{formatDateTime(data?.selectedDate)}</InfoValue>
           </InfoRow>
 
           <InfoRow>
             <InfoLabel>동행자 조건</InfoLabel>
-            <InfoValue>무관</InfoValue>
+            <InfoValue>{getGenderText(data?.companionGender)}</InfoValue>
           </InfoRow>
 
           <Divider />
 
           <InfoRow>
             <InfoLabel>요청 사항</InfoLabel>
-            <InfoValue>-</InfoValue>
+            <InfoValue>{data?.requestContent || "-"}</InfoValue>
           </InfoRow>
 
           <LoadingContainer>

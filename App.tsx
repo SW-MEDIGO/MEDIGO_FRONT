@@ -60,8 +60,7 @@ export default function App() {
   const [showLocationMap, setShowLocationMap] = useState(false);
   const [showAddressDetail, setShowAddressDetail] = useState(false);
   const [showHospitalPharmacy, setShowHospitalPharmacy] = useState(false);
-  const [showMedicalFacilityDetail, setShowMedicalFacilityDetail] =
-    useState(false);
+  const [showMedicalFacilityDetail, setShowMedicalFacilityDetail] = useState(false);
   const [showMedicalFacilityList, setShowMedicalFacilityList] = useState(false);
   const [currentLocation, setCurrentLocation] = useState("우리집");
   const [selectedLocation, setSelectedLocation] = useState({
@@ -72,13 +71,13 @@ export default function App() {
   const [selectedFacility, setSelectedFacility] = useState<any>(null);
   const [hospitalFacilities, setHospitalFacilities] = useState<any[]>([]);
   const [pharmacyFacilities, setPharmacyFacilities] = useState<any[]>([]);
-  const [currentTab, setCurrentTab] = useState<"hospital" | "pharmacy">(
-    "hospital"
-  );
+  const [currentTab, setCurrentTab] = useState<"hospital" | "pharmacy">("hospital");
   const [facilityLoading, setFacilityLoading] = useState(false);
   const [addressList, setAddressList] = useState<any[]>([]);
   const [editingAddress, setEditingAddress] = useState<any>(null);
   const [prescriptionData, setPrescriptionData] = useState<any>(null);
+  const [currentUserName, setCurrentUserName] = useState<string>("사용자");
+  const [companionMatchingData, setCompanionMatchingData] = useState<any>(null);
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -105,22 +104,25 @@ export default function App() {
     marketingConsent: false,
   });
 
-  // 앱 시작 시 온보딩 완료 상태 확인
+  // 앱 시작 시 온보딩 완료 상태 및 사용자 이름 확인
   useEffect(() => {
-    const checkOnboardingStatus = async () => {
+    const loadAppData = async () => {
       try {
-        const onboardingCompleted = await AsyncStorage.getItem(
-          "onboardingCompleted"
-        );
+        const onboardingCompleted = await AsyncStorage.getItem("onboardingCompleted");
         setHasCompletedOnboarding(onboardingCompleted === "true");
+
+        const storedUserName = await AsyncStorage.getItem("userName");
+        if (storedUserName) {
+          setCurrentUserName(storedUserName);
+        }
       } catch (error) {
-        console.log("온보딩 상태 확인 중 오류:", error);
+        console.log("앱 데이터 로드 중 오류:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    checkOnboardingStatus();
+    loadAppData();
   }, []);
 
   // 온보딩 완료 처리
@@ -163,11 +165,7 @@ export default function App() {
   };
 
   // 의료시설 목록 보기
-  const handleShowFacilityList = (
-    hospitals: any[],
-    pharmacies: any[],
-    activeTab: "hospital" | "pharmacy"
-  ) => {
+  const handleShowFacilityList = (hospitals: any[], pharmacies: any[], activeTab: "hospital" | "pharmacy") => {
     console.log("목록 보기:", {
       hospitals: hospitals.length,
       pharmacies: pharmacies.length,
@@ -185,10 +183,7 @@ export default function App() {
   };
 
   // 카카오 로컬 API로 병원/약국 검색 (HospitalPharmacyScreen과 공통 사용)
-  const searchMedicalFacilities = async (
-    type: "hospital" | "pharmacy",
-    coordinates: { lat: number; lng: number }
-  ) => {
+  const searchMedicalFacilities = async (type: "hospital" | "pharmacy", coordinates: { lat: number; lng: number }) => {
     setFacilityLoading(true);
     try {
       const keyword = type === "hospital" ? "병원" : "약국";
@@ -198,11 +193,9 @@ export default function App() {
       console.log(`${keyword} 검색 시작:`, coordinates);
 
       const response = await fetch(
-        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(
-          keyword
-        )}&x=${coordinates.lng}&y=${
-          coordinates.lat
-        }&radius=${radius}&size=15&sort=distance`,
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(keyword)}&x=${
+          coordinates.lng
+        }&y=${coordinates.lat}&radius=${radius}&size=15&sort=distance`,
         {
           method: "GET",
           headers: {
@@ -220,27 +213,23 @@ export default function App() {
       console.log(`${keyword} 검색 결과:`, data);
 
       if (data.documents && data.documents.length > 0) {
-        const medicalFacilities = data.documents.map(
-          (place: any, index: number) => {
-            const distance = place.distance
-              ? `${(parseInt(place.distance) / 1000).toFixed(1)}km`
-              : "거리 정보 없음";
+        const medicalFacilities = data.documents.map((place: any, index: number) => {
+          const distance = place.distance ? `${(parseInt(place.distance) / 1000).toFixed(1)}km` : "거리 정보 없음";
 
-            return {
-              id: place.id || `${type}_${index}`,
-              name: place.place_name,
-              type: type,
-              address: place.address_name,
-              phone: place.phone || "",
-              isOpen: true,
-              distance: distance,
-              coordinates: {
-                lat: parseFloat(place.y),
-                lng: parseFloat(place.x),
-              },
-            };
-          }
-        );
+          return {
+            id: place.id || `${type}_${index}`,
+            name: place.place_name,
+            type: type,
+            address: place.address_name,
+            phone: place.phone || "",
+            isOpen: true,
+            distance: distance,
+            coordinates: {
+              lat: parseFloat(place.y),
+              lng: parseFloat(place.x),
+            },
+          };
+        });
 
         // 검색 결과를 상태에 저장
         if (type === "hospital") {
@@ -278,8 +267,7 @@ export default function App() {
     setCurrentTab(tab);
 
     // 해당 탭의 데이터가 없으면 검색
-    const targetFacilities =
-      tab === "hospital" ? hospitalFacilities : pharmacyFacilities;
+    const targetFacilities = tab === "hospital" ? hospitalFacilities : pharmacyFacilities;
     if (targetFacilities.length === 0) {
       await searchMedicalFacilities(tab, selectedLocation.coordinates);
     }
@@ -297,10 +285,7 @@ export default function App() {
   };
 
   // 지도에서 위치 선택 시 주소 상세 화면으로 이동
-  const handleLocationConfirm = (
-    address: string,
-    coordinates: { lat: number; lng: number }
-  ) => {
+  const handleLocationConfirm = (address: string, coordinates: { lat: number; lng: number }) => {
     setSelectedLocation({
       address,
       detailAddress: address,
@@ -338,12 +323,10 @@ export default function App() {
 
     if (editingAddress) {
       // 편집 모드: 기존 주소 업데이트
-      setAddressList((prev) =>
-        prev.map((addr) => (addr.id === editingAddress.id ? newAddress : addr))
-      );
+      setAddressList(prev => prev.map(addr => (addr.id === editingAddress.id ? newAddress : addr)));
     } else {
       // 새 주소 추가
-      setAddressList((prev) => [...prev, newAddress]);
+      setAddressList(prev => [...prev, newAddress]);
     }
 
     setCurrentLocation(addressData.typeName);
@@ -354,7 +337,7 @@ export default function App() {
 
   // 주소 삭제
   const handleAddressDelete = (addressId: string) => {
-    setAddressList((prev) => prev.filter((addr) => addr.id !== addressId));
+    setAddressList(prev => prev.filter(addr => addr.id !== addressId));
   };
 
   // 주소 수정
@@ -414,12 +397,14 @@ export default function App() {
         <CompanionMatching
           navigation={{
             goBack: () => setCurrentScreen("home"),
-            navigate: (screen: string) => {
-              if (screen === "CompanionMatchingDone") {
+            navigate: (screen: string, params?: any) => {
+              if (screen === "CompanionMatchingDone" && params) {
+                setCompanionMatchingData(params);
                 setCurrentScreen("companion-matching-done");
               }
             },
           }}
+          currentCoordinates={selectedLocation.coordinates}
         />
       );
     }
@@ -431,6 +416,7 @@ export default function App() {
             goBack: () => setCurrentScreen("companion-matching"),
             navigateToHome: () => setCurrentScreen("home"),
           }}
+          data={companionMatchingData}
         />
       );
     }
@@ -479,9 +465,7 @@ export default function App() {
             activeTab={activeTab}
             onTabPress={setActiveTab}
             onHospitalPharmacyPress={handleHospitalPharmacyPress}
-            onNavigateToCompanionMatching={() =>
-              setCurrentScreen("companion-matching")
-            }
+            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
           />
         );
       case "usage":
@@ -491,7 +475,7 @@ export default function App() {
           <MedicalRecordsScreen
             activeTab={activeTab}
             onTabPress={setActiveTab}
-            onNavigateToPrescription={(data) => {
+            onNavigateToPrescription={data => {
               setPrescriptionData(data);
               setCurrentScreen("prescription");
             }}
@@ -508,6 +492,7 @@ export default function App() {
             onOpenReview={() => handleMyPageNavigation("review")}
             onOpenDoctor={() => handleMyPageNavigation("doctor")}
             onOpenPharmacy={() => handleMyPageNavigation("pharmacy")}
+            userName={currentUserName}
           />
         );
       default:
@@ -516,9 +501,7 @@ export default function App() {
             activeTab={activeTab}
             onTabPress={setActiveTab}
             onHospitalPharmacyPress={handleHospitalPharmacyPress}
-            onNavigateToCompanionMatching={() =>
-              setCurrentScreen("companion-matching")
-            }
+            onNavigateToCompanionMatching={() => setCurrentScreen("companion-matching")}
           />
         );
     }
@@ -562,8 +545,8 @@ export default function App() {
                   password: signUpData.password,
                   passwordConfirm: signUpData.passwordConfirm,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(2);
                 }}
                 onBack={() => setIsSigningUp(false)}
@@ -575,8 +558,8 @@ export default function App() {
                   name: signUpData.name,
                   phoneNumber: signUpData.phoneNumber,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(3);
                 }}
                 onBack={() => setSignUpStep(1)}
@@ -591,8 +574,8 @@ export default function App() {
                   ageLimit: signUpData.ageLimit,
                   marketingConsent: signUpData.marketingConsent,
                 }}
-                onComplete={(data) => {
-                  setSignUpData((prev) => ({ ...prev, ...data }));
+                onComplete={data => {
+                  setSignUpData(prev => ({ ...prev, ...data }));
                   setSignUpStep(4);
                 }}
                 onBack={() => setSignUpStep(2)}
@@ -601,8 +584,15 @@ export default function App() {
             {signUpStep === 4 && !isVerifyingManager && (
               <SignUpRole
                 userName={signUpData.name}
-                onComplete={(role) => {
+                onComplete={async role => {
                   if (role === "USER") {
+                    // 사용자 이름을 AsyncStorage에 저장
+                    try {
+                      await AsyncStorage.setItem("userName", signUpData.name);
+                      setCurrentUserName(signUpData.name);
+                    } catch (error) {
+                      console.log("사용자 이름 저장 중 오류:", error);
+                    }
                     setIsSigningUp(false);
                     setIsLoggedIn(true);
                     setSignUpStep(1); // 다음 회원가입을 위해 초기화
@@ -616,7 +606,14 @@ export default function App() {
             )}
             {isVerifyingManager && (
               <VerifyContainer
-                onComplete={() => {
+                onComplete={async () => {
+                  // 매니저 인증 완료 시 사용자 이름 저장
+                  try {
+                    await AsyncStorage.setItem("userName", signUpData.name);
+                    setCurrentUserName(signUpData.name);
+                  } catch (error) {
+                    console.log("사용자 이름 저장 중 오류:", error);
+                  }
                   setIsVerifyingManager(false);
                   setIsSigningUp(false);
                   setIsLoggedIn(true);

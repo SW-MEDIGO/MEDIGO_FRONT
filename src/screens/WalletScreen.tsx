@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components/native";
-import { View, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, TouchableOpacity, SafeAreaView } from "react-native";
 import { Text } from "../components";
+import { BackIcon } from "../components/icons";
 import { theme } from "../styles";
 
 interface WalletProps {
@@ -11,73 +11,74 @@ interface WalletProps {
 
 const Screen = styled(SafeAreaView)`
   flex: 1;
-  background-color: ${theme.colors.surface};
-  padding-top: ${theme.spacing.md + 36}px;
+  background-color: ${theme.colors.background};
 `;
 
-const Header = styled.View`
+const HeaderWrapper = styled.View`
+  padding-left: ${theme.spacing.lg}px;
+  padding-right: ${theme.spacing.lg}px;
+  padding-top: ${theme.spacing.xl}px;
+  padding-bottom: ${theme.spacing.md}px;
   flex-direction: row;
   align-items: center;
-  padding: ${theme.spacing.md}px;
+  justify-content: space-between;
 `;
 
-const BackBtn = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
+const BackButton = styled(TouchableOpacity)`
+  padding-top: ${theme.spacing.sm}px;
+  padding-bottom: ${theme.spacing.sm}px;
+  padding-left: ${theme.spacing.sm}px;
+  padding-right: ${theme.spacing.sm}px;
 `;
 
-const BackArrow = styled.View`
-  width: 8px;
-  height: 8px;
-  border-left-width: 2px;
-  border-bottom-width: 2px;
-  transform: rotate(45deg);
-  border-color: ${theme.colors.black};
-`;
-
-const Title = styled(Text)`
+const ContentContainer = styled.ScrollView`
   flex: 1;
-  text-align: center;
-  font-size: ${theme.fontSize.lg}px;
-  font-weight: ${theme.fontWeight.semibold};
-  margin-right: 24px;
+  padding-left: ${theme.spacing.lg}px;
+  padding-right: ${theme.spacing.lg}px;
 `;
 
 const Section = styled.View`
-  background-color: ${theme.colors.background};
-  border-top-width: 1px;
-  border-bottom-width: 1px;
-  border-color: ${theme.colors.surface};
-  padding: ${theme.spacing.md}px ${theme.spacing.md}px ${theme.spacing.lg}px;
+  background-color: ${theme.colors.white};
+  border-radius: ${theme.borderRadius.lg}px;
+  padding: 20px;
+  margin-bottom: 12px;
 `;
 
 const SectionTitle = styled(Text)`
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.text.secondary};
   font-size: ${theme.fontSize.sm}px;
+  margin-bottom: ${theme.spacing.md}px;
 `;
 
 const EmptyArea = styled.View`
   align-items: center;
-  padding: ${theme.spacing.xl}px 0 ${theme.spacing.md}px;
+  padding: ${theme.spacing.xl}px 0;
 `;
 
 const EmptyIcon = styled.View`
-  width: 64px;
-  height: 44px;
-  border-radius: 8px;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
   background-color: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.border};
+  align-items: center;
+  justify-content: center;
+  margin-bottom: ${theme.spacing.md}px;
+`;
+
+const EmptyIconInner = styled.View`
+  width: 50px;
+  height: 36px;
+  border-radius: 6px;
+  border: 2px solid ${theme.colors.border};
+  background-color: ${theme.colors.white};
 `;
 
 const EmptyText = styled(Text)`
-  color: ${theme.colors.textSecondary};
-  margin-top: ${theme.spacing.md}px;
+  color: ${theme.colors.text.secondary};
+  font-size: ${theme.fontSize.sm}px;
 `;
 
 const Button = styled.TouchableOpacity`
-  margin: 0 ${theme.spacing.md}px;
   margin-top: ${theme.spacing.md}px;
   padding: ${theme.spacing.md}px;
   background-color: ${theme.colors.white};
@@ -87,43 +88,69 @@ const Button = styled.TouchableOpacity`
 `;
 
 const ButtonLabel = styled(Text)`
-  color: ${theme.colors.warning};
-  font-weight: ${theme.fontWeight.medium};
+  color: #ff9500;
 `;
 
 export const WalletScreen: React.FC<WalletProps> = ({ onBack }) => {
   return (
     <Screen>
-      <Header>
-        <BackBtn onPress={onBack}>
-          <BackArrow />
-        </BackBtn>
-        <Title>결제수단 관리</Title>
-      </Header>
+      <HeaderWrapper>
+        <BackButton onPress={onBack}>
+          <BackIcon />
+        </BackButton>
+        <Text
+          size="lg"
+          weight="semibold"
+          color={theme.colors.text.primary}
+        >
+          결제수단 관리
+        </Text>
+        <View style={{ width: 40 }} />
+      </HeaderWrapper>
 
-      <Section>
-        <SectionTitle>신용/체크카드</SectionTitle>
-        <EmptyArea>
-          <EmptyIcon />
-          <EmptyText>등록된 결제수단이 없어요</EmptyText>
-        </EmptyArea>
-        <Button>
-          <ButtonLabel>신용/체크카드 등록</ButtonLabel>
-        </Button>
-      </Section>
+      <ContentContainer showsVerticalScrollIndicator={false}>
+        <Section
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
+          }}
+        >
+          <SectionTitle>신용/체크카드</SectionTitle>
+          <EmptyArea>
+            <EmptyIcon>
+              <EmptyIconInner />
+            </EmptyIcon>
+            <EmptyText>등록된 결제수단이 없어요</EmptyText>
+          </EmptyArea>
+          <Button activeOpacity={0.8}>
+            <ButtonLabel>신용/체크카드 등록</ButtonLabel>
+          </Button>
+        </Section>
 
-      <View style={{ height: 1, backgroundColor: theme.colors.surface }} />
-
-      <Section>
-        <SectionTitle>카카오페이</SectionTitle>
-        <EmptyArea>
-          <EmptyIcon />
-          <EmptyText>등록된 결제수단이 없어요</EmptyText>
-        </EmptyArea>
-        <Button>
-          <ButtonLabel>카카오페이 등록</ButtonLabel>
-        </Button>
-      </Section>
+        <Section
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2,
+          }}
+        >
+          <SectionTitle>카카오페이</SectionTitle>
+          <EmptyArea>
+            <EmptyIcon>
+              <EmptyIconInner />
+            </EmptyIcon>
+            <EmptyText>등록된 결제수단이 없어요</EmptyText>
+          </EmptyArea>
+          <Button activeOpacity={0.8}>
+            <ButtonLabel>카카오페이 등록</ButtonLabel>
+          </Button>
+        </Section>
+      </ContentContainer>
     </Screen>
   );
 };

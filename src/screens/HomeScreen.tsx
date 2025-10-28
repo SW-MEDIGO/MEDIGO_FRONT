@@ -45,6 +45,7 @@ const SectionTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
   color: #333333;
+  margin-bottom: 15px;
 `;
 
 const SectionHeader = styled.View`
@@ -118,17 +119,55 @@ const CompanionName = styled.Text`
 `;
 
 const ReservationCard = styled.View`
-  background-color: #f8f8f8;
+  background-color: white;
   border-radius: 12px;
-  padding: 30px;
-  align-items: center;
-  justify-content: center;
-  height: 120px;
+  padding: 20px;
+  margin-bottom: 20px;
 `;
 
-const NoReservationText = styled.Text`
-  color: #999999;
-  font-size: 16px;
+const ReservationContent = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ReservationInfo = styled.View`
+  flex: 1;
+`;
+
+const HospitalName = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 8px;
+`;
+
+const ReservationDate = styled.Text`
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 8px;
+`;
+
+const MatchStatusContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+
+const MatchStatusText = styled.Text`
+  font-size: 14px;
+  color: #00d4aa;
+  font-weight: 600;
+`;
+
+const HeartIcon = styled.View`
+  margin-left: 8px;
+`;
+
+const ReservationImageContainer = styled.View`
+  width: 80px;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const HospitalCard = styled.TouchableOpacity`
@@ -154,7 +193,7 @@ const HospitalTitle = styled.Text`
 `;
 
 const HospitalDescription = styled.Text`
-  font-size: 12px;
+  font-size: 14px;
   color: #666666;
 `;
 interface HomeScreenProps {
@@ -201,9 +240,7 @@ export const HomeScreen = ({
           >
             <BannerContent>
               <BannerTitle>동행자 매칭</BannerTitle>
-              <BannerDescription>
-                메디고와 함께 검증된 동행자를 찾아보세요
-              </BannerDescription>
+              <BannerDescription>메디고와 함께 검증된 동행자를 찾아보세요</BannerDescription>
             </BannerContent>
             <Image
               source={require("../../assets/main/connect.png")}
@@ -291,16 +328,40 @@ export const HomeScreen = ({
                 <RatingText>4.7</RatingText>
               </RatingSection>
             </ProfileSection>
-            <ResponseButton isOnline={false}>
-              평균 15분 이내 응답
-            </ResponseButton>
+            <ResponseButton isOnline={false}>평균 15분 이내 응답</ResponseButton>
           </CompanionCard>
         </ScrollView>
 
         {/* 예약 현황 섹션 */}
         <SectionTitle>예약 현황</SectionTitle>
-        <ReservationCard>
-          <NoReservationText>예약 정보가 없습니다</NoReservationText>
+        <ReservationCard
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 2,
+            elevation: 2,
+          }}
+        >
+          <ReservationContent>
+            <ReservationInfo>
+              <HospitalName>한밭병원</HospitalName>
+              <ReservationDate>2025-10-27 (월)</ReservationDate>
+              <MatchStatusContainer>
+                <MatchStatusText>매칭완료</MatchStatusText>
+              </MatchStatusContainer>
+            </ReservationInfo>
+            <ReservationImageContainer>
+              <Image
+                source={require("../../assets/Heart_rate_perspective_matte.png")}
+                style={{
+                  width: 50,
+                  height: 50,
+                }}
+                resizeMode="contain"
+              />
+            </ReservationImageContainer>
+          </ReservationContent>
         </ReservationCard>
 
         {/* 열린 병원/약국 찾기 섹션 */}
@@ -317,9 +378,7 @@ export const HomeScreen = ({
         >
           <HospitalContent>
             <HospitalTitle>열린 병원/약국 찾기&gt;</HospitalTitle>
-            <HospitalDescription>
-              주변에 있는 병원 / 약국이 열려있는지 확인하세요
-            </HospitalDescription>
+            <HospitalDescription>주변에 있는 병원 / 약국이 열려있는지 확인하세요</HospitalDescription>
           </HospitalContent>
           <Image
             source={require("../../assets/main/ping.png")}
@@ -333,7 +392,10 @@ export const HomeScreen = ({
       </ScrollContainer>
 
       {/* Bottom Navigation */}
-      <BottomNavigation activeTab={activeTab} onTabPress={onTabPress} />
+      <BottomNavigation
+        activeTab={activeTab}
+        onTabPress={onTabPress}
+      />
     </ScreenContainer>
   );
 };

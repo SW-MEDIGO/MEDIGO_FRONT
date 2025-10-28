@@ -74,15 +74,13 @@ const TabButton = styled.TouchableOpacity<{ isActive: boolean }>`
   padding: 12px;
   align-items: center;
   border-bottom-width: 2px;
-  border-bottom-color: ${(props: { isActive: boolean }) =>
-    props.isActive ? "#00A6D8" : "transparent"};
+  border-bottom-color: ${(props: { isActive: boolean }) => (props.isActive ? "#00A6D8" : "transparent")};
 `;
 
 const TabText = styled.Text<{ isActive: boolean }>`
   font-size: 16px;
   font-weight: 600;
-  color: ${(props: { isActive: boolean }) =>
-    props.isActive ? "#00A6D8" : "#666666"};
+  color: ${(props: { isActive: boolean }) => (props.isActive ? "#00A6D8" : "#666666")};
 `;
 
 const MapContainer = styled.View`
@@ -141,7 +139,12 @@ const ListButtonText = styled.Text`
 `;
 
 const ListIcon = () => (
-  <Svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+  <Svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+  >
     <Path
       d="M3 6H17M3 10H17M3 14H17"
       stroke="white"
@@ -165,37 +168,24 @@ export const HospitalPharmacyScreen = ({
   currentLocation = "현재 위치",
   currentCoordinates = { lat: 36.3504119, lng: 127.3845475 },
 }: HospitalPharmacyScreenProps) => {
-  const [activeTab, setActiveTab] = useState<"hospital" | "pharmacy">(
-    "hospital"
-  );
+  const [activeTab, setActiveTab] = useState<"hospital" | "pharmacy">("hospital");
   const [facilities, setFacilities] = useState<MedicalFacility[]>([]);
-  const [hospitalFacilities, setHospitalFacilities] = useState<
-    MedicalFacility[]
-  >([]);
-  const [pharmacyFacilities, setPharmacyFacilities] = useState<
-    MedicalFacility[]
-  >([]);
+  const [hospitalFacilities, setHospitalFacilities] = useState<MedicalFacility[]>([]);
+  const [pharmacyFacilities, setPharmacyFacilities] = useState<MedicalFacility[]>([]);
   const [loading, setLoading] = useState(false);
   const webViewRef = useRef<WebView>(null);
 
   // 카카오 로컬 API로 병원/약국 검색
-  const searchMedicalFacilities = async (
-    type: "hospital" | "pharmacy",
-    coordinates: { lat: number; lng: number }
-  ) => {
+  const searchMedicalFacilities = async (type: "hospital" | "pharmacy", coordinates: { lat: number; lng: number }) => {
     setLoading(true);
     try {
       const keyword = type === "hospital" ? "병원" : "약국";
       const radius = 5000; // 5km 반경
 
-      console.log(`${keyword} 검색 시작:`, coordinates);
-
       const response = await fetch(
-        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(
-          keyword
-        )}&x=${coordinates.lng}&y=${
-          coordinates.lat
-        }&radius=${radius}&size=15&sort=distance`,
+        `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(keyword)}&x=${
+          coordinates.lng
+        }&y=${coordinates.lat}&radius=${radius}&size=15&sort=distance`,
         {
           method: "GET",
           headers: {
@@ -210,33 +200,27 @@ export const HospitalPharmacyScreen = ({
       }
 
       const data = await response.json();
-      console.log(`${keyword} 검색 결과:`, data);
 
       if (data.documents && data.documents.length > 0) {
-        const medicalFacilities: MedicalFacility[] = data.documents.map(
-          (place: any, index: number) => {
-            // 거리 계산 (미터를 km로 변환)
-            const distance = place.distance
-              ? `${(parseInt(place.distance) / 1000).toFixed(1)}km`
-              : "거리 정보 없음";
+        const medicalFacilities: MedicalFacility[] = data.documents.map((place: any, index: number) => {
+          // 거리 계산 (미터를 km로 변환)
+          const distance = place.distance ? `${(parseInt(place.distance) / 1000).toFixed(1)}km` : "거리 정보 없음";
 
-            return {
-              id: place.id || `${type}_${index}`,
-              name: place.place_name,
-              type: type,
-              address: place.address_name,
-              phone: place.phone || "",
-              isOpen: true, // 실제로는 운영시간 API나 별도 정보가 필요
-              distance: distance,
-              coordinates: {
-                lat: parseFloat(place.y),
-                lng: parseFloat(place.x),
-              },
-            };
-          }
-        );
+          return {
+            id: place.id || `${type}_${index}`,
+            name: place.place_name,
+            type: type,
+            address: place.address_name,
+            phone: place.phone || "",
+            isOpen: true, // 실제로는 운영시간 API나 별도 정보가 필요
+            distance: distance,
+            coordinates: {
+              lat: parseFloat(place.y),
+              lng: parseFloat(place.x),
+            },
+          };
+        });
 
-        console.log(`${keyword} 파싱된 결과:`, medicalFacilities);
         setFacilities(medicalFacilities);
 
         // 탭별로 데이터 저장
@@ -248,7 +232,6 @@ export const HospitalPharmacyScreen = ({
 
         return medicalFacilities;
       } else {
-        console.log(`${keyword} 검색 결과 없음`);
         setFacilities([]);
 
         // 탭별로 빈 데이터 저장
@@ -261,11 +244,7 @@ export const HospitalPharmacyScreen = ({
         return [];
       }
     } catch (error) {
-      console.error(`${type} 검색 실패:`, error);
-      Alert.alert(
-        "오류",
-        "의료시설 정보를 가져올 수 없습니다. 다시 시도해주세요."
-      );
+      Alert.alert("오류", "의료시설 정보를 가져올 수 없습니다. 다시 시도해주세요.");
       setFacilities([]);
 
       // 탭별로 빈 데이터 저장
@@ -284,10 +263,7 @@ export const HospitalPharmacyScreen = ({
   // 컴포넌트 마운트 시 및 탭 변경 시 데이터 로드
   useEffect(() => {
     const loadData = async () => {
-      const searchResults = await searchMedicalFacilities(
-        activeTab,
-        currentCoordinates
-      );
+      const searchResults = await searchMedicalFacilities(activeTab, currentCoordinates);
 
       // 지도에 마커 표시
       const timer = setTimeout(() => {
@@ -314,13 +290,6 @@ export const HospitalPharmacyScreen = ({
 
   const handleListPress = () => {
     // 목록 화면으로 이동하는 로직
-    console.log(
-      "목록보기 클릭, 병원:",
-      hospitalFacilities.length,
-      "약국:",
-      pharmacyFacilities.length
-    );
-
     if (hospitalFacilities.length === 0 && pharmacyFacilities.length === 0) {
       Alert.alert("알림", "표시할 의료시설이 없습니다.");
       return;
@@ -350,8 +319,6 @@ export const HospitalPharmacyScreen = ({
         let map, markers = [];
         
         kakao.maps.load(function() {
-            console.log('카카오맵 로드 완료');
-            
             // 지도 생성
             var mapContainer = document.getElementById('map');
             var mapOption = {
@@ -360,20 +327,18 @@ export const HospitalPharmacyScreen = ({
             };
 
             map = new kakao.maps.Map(mapContainer, mapOption);
-            console.log('지도 생성 완료');
 
             // React Native 메시지 리스너
             window.addEventListener('message', function(event) {
                 try {
                     var data = JSON.parse(event.data);
-                    console.log('WebView 메시지 받음:', data);
                     
                     if (data.type === 'showMedicalFacilities') {
                         clearMarkers();
                         showMedicalFacilities(data.facilities, data.currentLocation);
                     }
                 } catch (error) {
-                    console.log('메시지 파싱 에러:', error);
+                    // 메시지 파싱 에러
                 }
             });
 
@@ -385,7 +350,6 @@ export const HospitalPharmacyScreen = ({
             }
 
             function showMedicalFacilities(facilities, currentLocation) {
-                console.log('의료시설 마커 표시:', facilities.length);
                 
                 // 현재 위치 마커 (파란색)
                 var currentMarker = new kakao.maps.Marker({
@@ -445,15 +409,13 @@ export const HospitalPharmacyScreen = ({
   const handleMessage = (event: any) => {
     try {
       const data = JSON.parse(event.nativeEvent.data);
-      console.log("WebView에서 메시지 받음:", data);
 
       if (data.type === "facilityClicked") {
         // 시설 클릭 시 상세 화면으로 이동
-        console.log("시설 클릭됨:", data.facility);
         onFacilitySelect?.(data.facility);
       }
     } catch (error) {
-      console.log("메시지 파싱 에러:", error);
+      // 메시지 파싱 에러
     }
   };
 
@@ -461,12 +423,21 @@ export const HospitalPharmacyScreen = ({
     <ScreenContainer>
       {/* Header */}
       <HeaderContainer>
-        <BackButton onPress={onBackPress} activeOpacity={0.7}>
-          <BackIcon width={24} height={24} />
+        <BackButton
+          onPress={onBackPress}
+          activeOpacity={0.7}
+        >
+          <BackIcon
+            width={24}
+            height={24}
+          />
         </BackButton>
         <HeaderTitle>열린 약국/병원 찾기</HeaderTitle>
         <BackButton style={{ opacity: 0 }}>
-          <BackIcon width={24} height={24} />
+          <BackIcon
+            width={24}
+            height={24}
+          />
         </BackButton>
       </HeaderContainer>
 
@@ -501,12 +472,6 @@ export const HospitalPharmacyScreen = ({
           allowsInlineMediaPlayback={true}
           mediaPlaybackRequiresUserAction={false}
           mixedContentMode="compatibility"
-          onLoadStart={() => console.log("WebView 로딩 시작")}
-          onLoadEnd={() => console.log("WebView 로딩 완료")}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent;
-            console.error("WebView 에러:", nativeEvent);
-          }}
         />
       </MapContainer>
 
@@ -519,8 +484,7 @@ export const HospitalPharmacyScreen = ({
             <LoadingText>의료시설을 검색하고 있습니다...</LoadingText>
           ) : (
             <FacilityCountText>
-              {activeTab === "hospital" ? "병원" : "약국"} {facilities.length}개
-              찾음
+              {activeTab === "hospital" ? "병원" : "약국"} {facilities.length}개 찾음
             </FacilityCountText>
           )}
         </LocationInfo>
