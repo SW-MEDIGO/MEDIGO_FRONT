@@ -98,7 +98,7 @@ const QuickActions = styled.View`
 /* ✅ 아이콘 경로 (src/screens → 루트 /assets) */
 const IC_FAMILY = require("../../assets/family.png");
 const IC_WALLET = require("../../assets/wallet.png");
-const IC_GEAR   = require("../../assets/setting.png");
+const IC_GEAR = require("../../assets/setting.png");
 
 /* ✅ QuickAction: 아이콘 + 터치 가능 */
 const QuickAction = ({
@@ -116,10 +116,15 @@ const QuickAction = ({
     style={{ alignItems: "center", flex: 1 }}
   >
     <IconCircle>
-      <Image source={icon} style={{ width: 24, height: 24, resizeMode: "contain" }} />
+      <Image
+        source={icon}
+        style={{ width: 24, height: 24, resizeMode: "contain" }}
+      />
     </IconCircle>
     <View style={{ height: theme.spacing.sm }} />
-    <Text size="sm" color={theme.colors.textSecondary}>{label}</Text>
+    <Text size="sm" color={theme.colors.textSecondary}>
+      {label}
+    </Text>
   </TouchableOpacity>
 );
 
@@ -251,7 +256,7 @@ const RegisterButton = styled.TouchableOpacity`
 `;
 
 const RegisterButtonText = styled(Text)`
-  color: #FF9500;
+  color: #ff9500;
   font-size: ${theme.fontSize.md}px;
 `;
 
@@ -264,7 +269,7 @@ export const FamilyScreen: React.FC<FamilyProps> = ({ onBack }) => {
         </BackButton>
         <HeaderTitle>가족관리</HeaderTitle>
       </Header>
-      
+
       <Content>
         <UserRow>
           <PersonIconContainer>
@@ -278,9 +283,12 @@ export const FamilyScreen: React.FC<FamilyProps> = ({ onBack }) => {
           </UserInfo>
           <CheckmarkSVG />
         </UserRow>
-        
+
         <RegisterButtonContainer>
-          <RegisterButton onPress={() => console.log("register family pressed")} activeOpacity={0.8}>
+          <RegisterButton
+            onPress={() => console.log("register family pressed")}
+            activeOpacity={0.8}
+          >
             <RegisterButtonText>가족등록</RegisterButtonText>
           </RegisterButton>
         </RegisterButtonContainer>

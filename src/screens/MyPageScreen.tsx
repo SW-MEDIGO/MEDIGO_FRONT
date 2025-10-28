@@ -95,10 +95,9 @@ const QuickActions = styled.View`
   align-items: stretch;
 `;
 
-/* ✅ 아이콘 경로 (src/screens → 루트 /assets) */
 const IC_FAMILY = require("../../assets/family.png");
 const IC_WALLET = require("../../assets/wallet.png");
-const IC_GEAR   = require("../../assets/setting.png");
+const IC_GEAR = require("../../assets/setting.png");
 
 /* ✅ QuickAction: 아이콘 + 터치 가능 */
 const QuickAction = ({
@@ -120,13 +119,16 @@ const QuickAction = ({
     hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
   >
     <IconCircle>
-      <Image source={icon} style={{ width: 24, height: 24, resizeMode: "contain" }} />
+      <Image
+        source={icon}
+        style={{ width: 24, height: 24, resizeMode: "contain" }}
+      />
     </IconCircle>
     <View style={{ height: theme.spacing.sm }} />
     <Text size="sm" color={theme.colors.text.secondary}>
       {label}
     </Text>
-  </View>
+  </Pressable>
 );
 
 /* ✅ MenuItem: onPress 받도록 */
@@ -154,20 +156,20 @@ interface MyPageScreenProps {
   onOpenPharmacy?: () => void;
 }
 
-export const MyPageScreen = ({ 
-  activeTab, 
-  onTabPress, 
-  onOpenFamily, 
-  onOpenWallet, 
-  onOpenSettings, 
-  onOpenReview, 
-  onOpenDoctor, 
-  onOpenPharmacy 
+export const MyPageScreen = ({
+  activeTab,
+  onTabPress,
+  onOpenFamily,
+  onOpenWallet,
+  onOpenSettings,
+  onOpenReview,
+  onOpenDoctor,
+  onOpenPharmacy,
 }: MyPageScreenProps) => {
   return (
     <ScreenContainer>
-      <Scroll 
-        keyboardShouldPersistTaps="always" 
+      <Scroll
+        keyboardShouldPersistTaps="always"
         contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}
       >
         <Card
@@ -197,9 +199,17 @@ export const MyPageScreen = ({
 
           <View style={{ height: theme.spacing.xl }} />
           <QuickActions>
-            <QuickAction label="가족관리" icon={IC_FAMILY} onPress={onOpenFamily} />
+            <QuickAction
+              label="가족관리"
+              icon={IC_FAMILY}
+              onPress={onOpenFamily}
+            />
             <View style={{ width: theme.spacing.lg }} />
-            <QuickAction label="결제수단 관리" icon={IC_WALLET} onPress={onOpenWallet} />
+            <QuickAction
+              label="결제수단 관리"
+              icon={IC_WALLET}
+              onPress={onOpenWallet}
+            />
             <View style={{ width: theme.spacing.lg }} />
             <QuickAction label="설정" icon={IC_GEAR} onPress={onOpenSettings} />
           </QuickActions>
@@ -218,7 +228,10 @@ export const MyPageScreen = ({
           <Divider />
           <MenuItem title="공지사항" onPress={() => Alert.alert("공지사항")} />
           <Divider />
-          <MenuItem title="자주하는 질문" onPress={() => Alert.alert("자주하는 질문")} />
+          <MenuItem
+            title="자주하는 질문"
+            onPress={() => Alert.alert("자주하는 질문")}
+          />
         </Menu>
       </Scroll>
 
