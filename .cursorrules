@@ -1,0 +1,148 @@
+# Commit Message Rules
+
+When creating git commits, follow this format:
+
+```
+[Type] - commit message in English
+```
+
+## Commit Types
+
+- `[Feat]` - New feature implementation
+- `[Fix]` - Bug fix
+- `[Refactor]` - Code refactoring (no functional changes)
+- `[Style]` - Code style changes (formatting, missing semicolons, etc.)
+- `[Docs]` - Documentation changes
+- `[Test]` - Test code additions or modifications
+- `[Chore]` - Build tasks, package manager configs, etc.
+- `[Perf]` - Performance improvements
+- `[Build]` - Build system or external dependency changes
+- `[CI]` - CI configuration changes
+
+## Examples
+
+- `[Feat] - Add user authentication screen`
+- `[Fix] - Resolve navigation issue on HomeScreen`
+- `[Refactor] - Simplify container component logic`
+- `[Docs] - Update README with installation steps`
+
+## Guidelines
+
+- Commit messages must be written in English
+- Keep messages concise and descriptive
+- Use imperative mood (e.g., "Add" not "Added")
+- Start with a capital letter after the type
+
+## Commit Strategy
+
+When making changes, break them down into logical, separate commits:
+
+### ✅ DO:
+
+- Make separate commits for different features or changes
+- Group related changes together in one commit
+- Make atomic commits that can be easily reviewed
+- Commit UI changes separately from logic changes
+- Commit new features separately from bug fixes
+
+### ❌ DON'T:
+
+- Mix unrelated changes in a single commit
+- Commit everything at once without logical separation
+- Include multiple features in one commit
+
+### Examples of Good Commit Separation:
+
+```
+[Feat] - Add user authentication screen
+[Style] - Update button styling in auth screen
+[Fix] - Resolve navigation issue on HomeScreen
+[Refactor] - Simplify container component logic
+[Docs] - Update README with installation steps
+```
+
+### Examples of Bad Commit Separation:
+
+```
+[Feat] - Add auth screen and fix navigation and update styling
+```
+
+# Styling Rules
+
+## Use styled-components for styling
+
+- Always use `styled-components` for component styling
+- Do not use inline styles or plain CSS files
+- Follow the styled-components React Native conventions
+- Import styled-components from `styled-components/native` for React Native projects
+
+## styled-components/native Property Rules
+
+When using styled-components with React Native, follow these property naming conventions:
+
+### ❌ DO NOT USE (Not supported in styled-components/native template literals):
+
+- `margin-horizontal` → Use `margin-left` and `margin-right` separately
+- `margin-vertical` → Use `margin-top` and `margin-bottom` separately
+- `padding-horizontal` → Use `padding-left` and `padding-right` separately
+- `padding-vertical` → Use `padding-top` and `padding-bottom` separately
+- `shadow-color`, `shadow-offset`, `shadow-opacity`, `shadow-radius`, `elevation` → Not supported in template literals
+
+### ✅ DO USE:
+
+- `margin-left`, `margin-right`, `margin-top`, `margin-bottom`
+- `padding-left`, `padding-right`, `padding-top`, `padding-bottom`
+
+### Shadow Properties
+
+For shadow effects, use the `style` prop instead of template literals:
+
+```typescript
+const StyledComponent = styled.View`
+  /* Other styles here */
+`;
+
+// Apply shadows via style prop
+<StyledComponent
+  style={{
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8, // for Android
+  }}
+/>;
+```
+
+# React Native & TypeScript Rules
+
+## Component Type Definitions
+
+- DO NOT use `React.FC` or `React.FunctionComponent` (not available with esModuleInterop)
+- Use regular function components with explicit prop types:
+
+  ```typescript
+  interface MyComponentProps {
+    title: string;
+  }
+
+  export const MyComponent = ({ title }: MyComponentProps) => {
+    // component code
+  };
+  ```
+
+## SVG Component Types
+
+- Use `React.ComponentType<SvgProps>` for SVG component types
+- DO NOT use `React.FC<SvgProps>`
+- Example:
+  ```typescript
+  interface IconProps {
+    source: ImageSourcePropType | React.ComponentType<SvgProps>;
+  }
+  ```
+
+## TypeScript Configuration
+
+- Ensure `esModuleInterop: true` is set in `tsconfig.json`
+- This is required for proper React imports

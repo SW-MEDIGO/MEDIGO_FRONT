@@ -5,100 +5,58 @@ import { theme } from "../styles";
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: "primary" | "secondary" | "outline";
-  size?: "small" | "medium" | "large";
   disabled?: boolean;
+  variant?: "primary" | "secondary";
+  style?: any;
 }
 
-const StyledButton = styled.TouchableOpacity<{
-  variant: "primary" | "secondary" | "outline";
-  size: "small" | "medium" | "large";
+interface StyledButtonProps {
   disabled: boolean;
-}>`
-  background-color: ${({ variant, disabled }: { variant: "primary" | "secondary" | "outline"; disabled: boolean }) => {
+  variant: "primary" | "secondary";
+}
+
+const StyledButton = styled.TouchableOpacity<StyledButtonProps>`
+  width: 100%;
+  height: 54px;
+  border-radius: 10px;
+  background-color: ${({ disabled, variant }: StyledButtonProps) => {
     if (disabled) return theme.colors.border;
-    switch (variant) {
-      case "primary":
-        return theme.colors.primary;
-      case "secondary":
-        return theme.colors.secondary;
-      case "outline":
-        return "transparent";
-      default:
-        return theme.colors.primary;
-    }
+    return variant === "secondary" ? theme.colors.white : "#0BC1BF";
   }};
-  border: ${({ variant }: { variant: "primary" | "secondary" | "outline" }) =>
-    variant === "outline" ? `2px solid ${theme.colors.primary}` : "none"};
-  border-radius: ${theme.borderRadius.md}px;
-  padding: ${({ size }: { size: "small" | "medium" | "large" }) => {
-    switch (size) {
-      case "small":
-        return `${theme.spacing.sm}px ${theme.spacing.md}px`;
-      case "medium":
-        return `${theme.spacing.md}px ${theme.spacing.lg}px`;
-      case "large":
-        return `${theme.spacing.lg}px ${theme.spacing.xl}px`;
-      default:
-        return `${theme.spacing.md}px ${theme.spacing.lg}px`;
-    }
-  }};
+  border-width: ${({ variant }: StyledButtonProps) => (variant === "secondary" ? 1 : 0)}px;
+  border-color: ${({ variant }: StyledButtonProps) => (variant === "secondary" ? theme.colors.border : "transparent")};
   align-items: center;
   justify-content: center;
-  opacity: ${({ disabled }: { disabled: boolean }) => (disabled ? 0.6 : 1)};
+  opacity: ${({ disabled }: StyledButtonProps) => (disabled ? 0.6 : 1)};
 `;
 
-const ButtonText = styled.Text<{
-  variant: "primary" | "secondary" | "outline";
-  size: "small" | "medium" | "large";
+interface ButtonTextProps {
   disabled: boolean;
-}>`
-  color: ${({ variant, disabled }: { variant: "primary" | "secondary" | "outline"; disabled: boolean }) => {
-    if (disabled) return theme.colors.textSecondary;
-    switch (variant) {
-      case "primary":
-      case "secondary":
-        return theme.colors.white;
-      case "outline":
-        return theme.colors.primary;
-      default:
-        return theme.colors.white;
-    }
+  variant: "primary" | "secondary";
+}
+
+const ButtonText = styled.Text<ButtonTextProps>`
+  font-family: ${theme.fonts.primary};
+  color: ${({ disabled, variant }: ButtonTextProps) => {
+    if (disabled) return theme.colors.text.secondary;
+    return variant === "secondary" ? theme.colors.text.primary : theme.colors.white;
   }};
-  font-size: ${({ size }: { size: "small" | "medium" | "large" }) => {
-    switch (size) {
-      case "small":
-        return theme.fontSize.sm;
-      case "medium":
-        return theme.fontSize.md;
-      case "large":
-        return theme.fontSize.lg;
-      default:
-        return theme.fontSize.md;
-    }
-  }}px;
+  font-size: ${theme.fontSize.md}px;
   font-weight: ${theme.fontWeight.semibold};
 `;
 
-export const Button: React.FC<ButtonProps> = ({
-  title,
-  onPress,
-  variant = "primary",
-  size = "medium",
-  disabled = false,
-}) => {
+export const Button = ({ title, onPress, disabled = false, variant = "primary", style }: ButtonProps) => {
   return (
     <StyledButton
-      variant={variant}
-      size={size}
       disabled={disabled}
+      variant={variant}
       onPress={onPress}
       activeOpacity={0.8}
+      style={style}
     >
       <ButtonText
-        variant={variant}
-        size={size}
         disabled={disabled}
+        variant={variant}
       >
         {title}
       </ButtonText>

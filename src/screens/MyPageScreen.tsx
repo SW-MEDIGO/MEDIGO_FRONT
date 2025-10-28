@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { View, Alert, Image, TouchableOpacity, Pressable } from "react-native"; // ← Pressable 추가
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Container, Text } from "../components";
+import { BottomNavigation } from "../components/BottomNavigation";
 import { theme } from "../styles";
 
 interface MyPageProps {
@@ -17,7 +18,7 @@ interface MyPageProps {
 
 const ScreenContainer = styled(SafeAreaView)`
   flex: 1;
-  background-color: ${theme.colors.surface};
+  background-color: ${theme.colors.background};
 `;
 
 const Scroll = styled.ScrollView`
@@ -25,16 +26,10 @@ const Scroll = styled.ScrollView`
 `;
 
 const Card = styled.View`
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.white};
   border-radius: ${theme.borderRadius.lg}px;
   padding: ${theme.spacing.lg}px;
   margin: ${theme.spacing.md}px;
-  /* subtle shadow */
-  shadow-color: #000;
-  shadow-opacity: 0.08;
-  shadow-radius: 8px;
-  shadow-offset: 0px 2px;
-  elevation: 2;
 `;
 
 const Row = styled.View`
@@ -56,13 +51,13 @@ const IconCircle = styled.View`
   width: 36px;
   height: 36px;
   border-radius: 18px;
-  background-color: ${theme.colors.surface};
+  background-color: ${theme.colors.background};
   align-items: center;
   justify-content: center;
 `;
 
 const Menu = styled.View`
-  background-color: ${theme.colors.background};
+  background-color: ${theme.colors.white};
   border-radius: ${theme.borderRadius.lg}px;
   margin: 0 ${theme.spacing.md}px ${theme.spacing.md}px;
   overflow: hidden;
@@ -70,7 +65,7 @@ const Menu = styled.View`
 
 const Divider = styled.View`
   height: 1px;
-  background-color: ${theme.colors.surface};
+  background-color: ${theme.colors.border};
   margin-left: ${theme.spacing.lg}px;
 `;
 
@@ -89,7 +84,7 @@ const RightArrow = () => (
       borderRightWidth: 2,
       borderTopWidth: 2,
       transform: [{ rotate: "45deg" }],
-      borderColor: theme.colors.textSecondary,
+      borderColor: theme.colors.text.secondary,
     }}
   />
 );
@@ -128,8 +123,10 @@ const QuickAction = ({
       <Image source={icon} style={{ width: 24, height: 24, resizeMode: "contain" }} />
     </IconCircle>
     <View style={{ height: theme.spacing.sm }} />
-    <Text size="sm" color={theme.colors.textSecondary}>{label}</Text>
-  </Pressable>
+    <Text size="sm" color={theme.colors.text.secondary}>
+      {label}
+    </Text>
+  </View>
 );
 
 /* ✅ MenuItem: onPress 받도록 */
@@ -146,18 +143,55 @@ const MenuItem = ({
   </ItemRow>
 );
 
-export const MyPageScreen: React.FC<MyPageProps> = ({ onOpenFamily, onOpenWallet, onOpenSettings, onOpenReview, onOpenDoctor, onOpenPharmacy }) => {
+interface MyPageScreenProps {
+  activeTab?: string;
+  onTabPress?: (tab: string) => void;
+  onOpenFamily?: () => void;
+  onOpenWallet?: () => void;
+  onOpenSettings?: () => void;
+  onOpenReview?: () => void;
+  onOpenDoctor?: () => void;
+  onOpenPharmacy?: () => void;
+}
+
+export const MyPageScreen = ({ 
+  activeTab, 
+  onTabPress, 
+  onOpenFamily, 
+  onOpenWallet, 
+  onOpenSettings, 
+  onOpenReview, 
+  onOpenDoctor, 
+  onOpenPharmacy 
+}: MyPageScreenProps) => {
   return (
     <ScreenContainer>
-      <Scroll keyboardShouldPersistTaps="always" contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
-        <Card>
+      <Scroll 
+        keyboardShouldPersistTaps="always" 
+        contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}
+      >
+        <Card
+          style={{
+            shadowColor: "#000",
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 2 },
+            elevation: 2,
+          }}
+        >
           <Row>
             <Avatar>
-              <Text weight="bold" color={theme.colors.white}>장</Text>
+              <Text weight="bold" color={theme.colors.white}>
+                장
+              </Text>
             </Avatar>
             <View>
-              <Text size="lg" weight="bold">장은성</Text>
-              <Text size="sm" color={theme.colors.textSecondary}>마이페이지</Text>
+              <Text size="lg" weight="bold">
+                장은성
+              </Text>
+              <Text size="sm" color={theme.colors.text.secondary}>
+                마이페이지
+              </Text>
             </View>
           </Row>
 
@@ -187,8 +221,11 @@ export const MyPageScreen: React.FC<MyPageProps> = ({ onOpenFamily, onOpenWallet
           <MenuItem title="자주하는 질문" onPress={() => Alert.alert("자주하는 질문")} />
         </Menu>
       </Scroll>
+
+      <BottomNavigation
+        activeTab="profile"
+        onTabPress={onTabPress || (() => {})}
+      />
     </ScreenContainer>
   );
 };
-
-export default MyPageScreen;
